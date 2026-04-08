@@ -10,7 +10,7 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 
 ## Architecture
 
-- Skills are SKILL.md files in `jtbd-switch/` (and future skill directories)
+- Skills are SKILL.md files in their own directories (`jtbd-switch/`, `jtbd-interview/`, etc.)
 - User data lives in `.jtbd/` in the user's repo (not this repo)
 - No external dependencies. No build step. No compiled binaries.
 - Optional gstack integration detected at runtime via path check

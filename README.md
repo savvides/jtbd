@@ -81,7 +81,7 @@ JTBD skills require only Claude Code. No other dependencies.
 If you also have [gstack](https://github.com/garrytan/gstack) installed, the skills chain naturally into gstack's workflow:
 
 ```
-/jtbd-switch → /jtbd-patterns → /jtbd-brief → /office-hours → /plan-eng-review → /ship
+/jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-brief → /office-hours → /plan-eng-review → /ship
 ```
 
 ## Learn JTBD

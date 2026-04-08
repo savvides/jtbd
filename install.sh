@@ -6,7 +6,7 @@ set -e
 
 INSTALL_DIR="$HOME/.claude/skills/jtbd"
 REPO_URL="https://github.com/philippossavvides/jtbd.git"
-TAG="v1.0.0"
+TAG="v1.1.0"
 
 echo "jtbd installer"
 echo "=============="

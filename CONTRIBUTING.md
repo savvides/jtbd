@@ -19,7 +19,7 @@ The `SKILL.md` needs:
 4. **An example output** showing the exact expected format
 5. **A human review step** using AskUserQuestion before writing files
 
-Look at `jtbd-switch/SKILL.md` as the reference implementation.
+Look at `jtbd-switch/SKILL.md` or `jtbd-interview/SKILL.md` as reference implementations.
 
 ## YAML schema
 

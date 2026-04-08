@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.1.0] - 2026-04-08
 
 ### Added
-- `/jtbd-interview` skill: generate a customized Switch interview script based on product context and evidence gaps
+- `/jtbd-interview` skill: generate a customized Switch interview script tailored to your product, target user, and gaps in your existing evidence. Supports four interview contexts (switched-to, churned, competitor, evaluating) with Moesta's backward-timeline technique and force-probing questions
 
 ## [1.0.0] - 2026-04-08
 

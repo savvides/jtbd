@@ -106,7 +106,9 @@ For each force, probe with specific questions:
 - **"It was frustrating"** — Vague emotions. Push for events: "What specifically happened that frustrated you?"
 - **No specific dates or events** — Timeline is too abstract. Push: "Was this before or after [reference event]? Roughly how many weeks/months?"
 
-## How /jtbd-switch uses this
+## How the skills use this
+
+Run `/jtbd-interview` to generate a customized interview script based on your product context and any evidence gaps from prior interviews. Then run the interview.
 
 When you run `/jtbd-switch` on an interview transcript, it extracts:
 
