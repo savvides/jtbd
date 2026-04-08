@@ -1,0 +1,34 @@
+# Synthesized from patterns analysis on 2026-04-15
+
+job: "Get reliable numbers to leadership without being the bottleneck"
+frequency: 3/3 interviews
+confidence: high
+
+steps:
+  - name: "Collect raw data from multiple sources"
+    friction: "Data lives in different tools, formats, and teams"
+    opportunity: "Automatic data ingestion from all sources"
+
+  - name: "Reconcile conflicting numbers"
+    friction: "Different teams report different numbers for the same metric"
+    opportunity: "Single source of truth with clear definitions"
+
+  - name: "Generate report or dashboard"
+    friction: "Tool crashes under load or takes too long during critical periods"
+    opportunity: "Real-time, always-available dashboard"
+
+  - name: "Deliver numbers to leadership"
+    friction: "Leadership depends on a person to relay data"
+    opportunity: "Self-serve access — leadership checks directly"
+
+  - name: "Answer follow-up questions"
+    friction: "Requires manual investigation, delays, and context switching"
+    opportunity: "Drill-down capability in the dashboard itself"
+
+switching_trigger: "A high-stakes moment (board meeting, month-end, product launch) where data was unavailable, late, or wrong"
+
+forces_summary:
+  what_pushes: "Tool failure or data inconsistency at the worst possible moment"
+  what_pulls: "The promise of never being the bottleneck again"
+  what_scares: "Losing historical data in the migration"
+  what_holds: "Existing workarounds that 'work well enough'"

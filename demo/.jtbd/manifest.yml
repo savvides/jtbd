@@ -1,0 +1,12 @@
+schema_version: 1
+product:
+  name: ReportFlow
+  description: Real-time reporting dashboards for operations teams
+  stage: has-users
+target_user:
+  role: Operations Manager
+  context: Mid-size companies (50-500 employees) with month-end reporting cycles
+settings:
+  auto_commit: true
+  gitignore_raw: true
+  evidence_threshold: 6

@@ -1,0 +1,55 @@
+Interview Transcript — Sarah, Operations Manager at Acme Logistics
+Date: April 7, 2026
+Interviewer: [Founder]
+
+---
+
+Interviewer: Sarah, thanks for taking the time. I'd love to hear about your experience switching reporting tools. Can you start by telling me what you ended up going with?
+
+Sarah: Yeah, we switched to ReportFlow about four months ago. Before that we were using DataTracker, which we'd had for maybe three years.
+
+Interviewer: What was DataTracker like?
+
+Sarah: I mean, it worked. Mostly. The team knew how to use it, everyone had their own little workarounds for the quirky parts. But it had this habit of going down at the worst possible times.
+
+Interviewer: Can you give me a specific example?
+
+Sarah: Oh yeah. Last October, during our month-end close. It went down for three days. Three days. I literally couldn't tell my CEO what our numbers were. He's standing in my office asking "where are we at?" and I'm like, I have no idea. I was pulling data from email chains and Slack messages trying to piece together an answer. That was the moment I thought, okay, something has to change.
+
+Interviewer: So that October outage was the first time you thought about switching?
+
+Sarah: Honestly, the idea had been floating around for a while. There were smaller incidents before that. But October was when it went from "yeah this is annoying" to "this is actually threatening my credibility." When your CEO asks you a simple question and you can't answer it, that's a bad look.
+
+Interviewer: After that October incident, what did you do?
+
+Sarah: At first, nothing dramatic. I started paying more attention to what other ops people were using. I asked around in a few Slack communities I'm part of. Read some comparison articles. Just kind of... absorbing information. That went on for maybe two months.
+
+Interviewer: What changed to make you start actively looking?
+
+Sarah: In December, my CEO asked me to present a recommendation for a replacement at our January leadership meeting. So now I had a deadline. I signed up for four free trials over the holidays. Did demo calls with two vendors in early January.
+
+Interviewer: How did you decide on ReportFlow specifically?
+
+Sarah: Two things. First, they could import our historical data from DataTracker. That was huge. I didn't want to lose three years of trend data. Second, my CEO sat in on one of the demo calls and he just... got it immediately. He said "buy it" before the call was even over. When your CEO is on board, the decision gets easy fast.
+
+Interviewer: What was the switch actually like?
+
+Sarah: Onboarding took about two weeks. The import mostly worked, but we had to manually re-enter about three months of data where the formats didn't match. That was painful. My team was grumpy about it. But once we got past that hump, it was fine.
+
+Interviewer: Was there anything that almost stopped you from switching?
+
+Sarah: Yeah, the data migration. What if we lose three years of data in the switch? That kept me up at night. I actually had our IT person do a test import before we committed. I wasn't going to sign anything until I saw our historical data in the new system.
+
+Interviewer: What about the old tool — was there anything comfortable about it that was hard to give up?
+
+Sarah: Honestly, the workarounds. Everyone had their own way of dealing with DataTracker's quirks. My analyst had this whole spreadsheet that reconciled DataTracker's numbers with reality. When we switched, he was kind of lost for a while. His entire workflow was built around compensating for the old tool's problems.
+
+Interviewer: Now that you've been on ReportFlow for a few months, what's different?
+
+Sarah: I wanted my CEO to be able to see the numbers himself, without going through me. That's what ReportFlow gives us. Real-time dashboards. He checks them on his phone now. I don't get the "where are we at?" question anymore because he already knows. That's the whole game for me — not being the bottleneck between leadership and the data.
+
+Interviewer: That's really helpful. Is there anything else about the switch that we haven't covered?
+
+Sarah: One thing — I think we had some integrations with other internal tools that connected to DataTracker. I'm not sure we've fully reconnected everything in ReportFlow. It's on my list but hasn't been urgent enough to prioritize.
+
+Interviewer: Thanks Sarah, this has been incredibly useful.
