@@ -6,6 +6,7 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 
 - `/jtbd-demo` — 5-minute guided walkthrough of JTBD for new users
 - `/jtbd-switch` — Analyze one interview transcript into a structured Switch analysis (YAML)
+- `/jtbd-interview` — Generate a customized Switch interview script
 
 ## Architecture
 
@@ -25,3 +26,4 @@ When the user's request matches an available skill, invoke it using the Skill to
 Key routing rules:
 - Demo, tutorial, how does this work, show me, getting started → invoke jtbd-demo
 - Analyze interview, customer interview, switching analysis → invoke jtbd-switch
+- Interview script, interview guide, how to interview → invoke jtbd-interview

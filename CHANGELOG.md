@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0.0] - 2026-04-08
+## [1.1.0] - 2026-04-08
+
+### Added
+- `/jtbd-interview` skill: generate a customized Switch interview script based on product context and evidence gaps
+
+## [1.0.0] - 2026-04-08
 
 ### Added
 - `/jtbd-switch` skill: analyze a customer interview transcript into a structured Switch analysis (YAML)

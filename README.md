@@ -62,7 +62,7 @@ See `demo/.jtbd/` for a fully-populated example with 3 interviews and pattern an
 |-------|--------|-------------|
 | `/jtbd-demo` | Available | 5-minute guided walkthrough of JTBD — learn the framework by seeing it in action |
 | `/jtbd-switch` | Available | Analyze one interview transcript into a structured Switch analysis |
-| `/jtbd-interview` | Coming soon | Generate a customized Switch interview script |
+| `/jtbd-interview` | **Available** | Generate a customized Switch interview script |
 | `/jtbd-patterns` | Coming soon | Find patterns across 3+ switch analyses |
 | `/jtbd-forces` | Coming soon | Generate an HTML forces diagram |
 | `/jtbd-map` | Coming soon | Synthesize patterns into a job map |

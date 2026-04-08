@@ -306,4 +306,4 @@ If the commit fails (dirty tree, hooks, etc.), write the file but skip the commi
 > **Next steps:**
 > - Do more interviews and run `/jtbd-switch` on each one
 > - After 3+ interviews, run `/jtbd-patterns` to find cross-interview patterns (coming soon)
-> - Run `/jtbd-interview` to generate a customized interview script (coming soon)
+> - Run `/jtbd-interview` to generate a customized interview script
