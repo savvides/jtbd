@@ -434,4 +434,4 @@ If the commit fails, write the file but skip the commit. Tell the user: "File wr
 > - Print it or open it on your phone during the interview
 > - Record the interview (Fireflies, Otter, or voice memo)
 > - After the interview, run `/jtbd-switch` with the transcript
-> - After 3+ switch analyses, run `/jtbd-patterns` to find cross-interview patterns (coming soon)
+> - After 3+ switch analyses, run `/jtbd-patterns` to find cross-interview patterns
