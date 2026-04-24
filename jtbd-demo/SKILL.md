@@ -161,7 +161,7 @@ Options: A) Show me patterns
 
 Read `$_JTBD_SKILLS/demo/.jtbd/patterns/patterns-20260415.yml` and present the key findings.
 
-> After 3+ interviews, you run `/jtbd-patterns` (coming soon) and it finds what repeats:
+> After 3+ interviews, you run `/jtbd-patterns` and it finds what repeats:
 >
 > **The job that emerged (3/3 interviews):**
 > "Get reliable numbers to leadership without being the bottleneck"

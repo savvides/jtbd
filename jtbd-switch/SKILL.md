@@ -282,7 +282,7 @@ If the user chooses B, make the requested changes and re-present.
 
 If `evidence_strength.overall` < 5, add this warning to the AskUserQuestion:
 
-> **Warning:** Evidence strength is low ({overall}/10). This interview may not have been a Switch interview, or the transcript is missing key moments. Consider re-interviewing using a `/jtbd-interview` script (coming soon).
+> **Warning:** Evidence strength is low ({overall}/10). This interview may not have been a Switch interview, or the transcript is missing key moments. Consider re-interviewing using a `/jtbd-interview` script.
 
 ## Write and Commit
 
@@ -305,5 +305,5 @@ If the commit fails (dirty tree, hooks, etc.), write the file but skip the commi
 >
 > **Next steps:**
 > - Do more interviews and run `/jtbd-switch` on each one
-> - After 3+ interviews, run `/jtbd-patterns` to find cross-interview patterns (coming soon)
+> - After 3+ interviews, run `/jtbd-patterns` to find cross-interview patterns
 > - Run `/jtbd-interview` to generate a customized interview script
