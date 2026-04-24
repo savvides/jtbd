@@ -64,6 +64,7 @@ See `demo/.jtbd/` for a fully-populated example with 3 interviews and pattern an
 | `/jtbd-switch` | Available | Analyze one interview transcript into a structured Switch analysis |
 | `/jtbd-interview` | **Available** | Generate a customized Switch interview script |
 | `/jtbd-patterns` | **Available** | Find patterns across 3+ switch analyses |
+| `/jtbd-pipeline` | **Available** | Batch-process multiple transcripts through the full pipeline |
 | `/jtbd-forces` | Coming soon | Generate an HTML forces diagram |
 | `/jtbd-map` | Coming soon | Synthesize patterns into a job map |
 | `/jtbd-brief` | Coming soon | Generate a product brief from .jtbd/ data |
@@ -82,6 +83,8 @@ If you also have [gstack](https://github.com/garrytan/gstack) installed, the ski
 
 ```
 /jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-brief → /office-hours → /plan-eng-review → /ship
+
+Or batch-process everything at once: `/jtbd-pipeline path/to/transcripts/`
 ```
 
 ## Learn JTBD
