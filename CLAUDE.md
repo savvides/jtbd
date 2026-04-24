@@ -8,6 +8,7 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 - `/jtbd-switch` — Analyze one interview transcript into a structured Switch analysis (YAML)
 - `/jtbd-interview` — Generate a customized Switch interview script
 - `/jtbd-patterns` — Find cross-interview patterns across 3+ switch analyses
+- `/jtbd-pipeline` — Batch-process multiple transcripts through the full analysis pipeline
 
 ## Architecture
 
@@ -29,3 +30,4 @@ Key routing rules:
 - Analyze interview, customer interview, switching analysis → invoke jtbd-switch
 - Interview script, interview guide, how to interview → invoke jtbd-interview
 - Find patterns, cross-interview, what are the jobs → invoke jtbd-patterns
+- Batch analysis, process all interviews, pipeline, analyze all transcripts → invoke jtbd-pipeline
