@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 - `/jtbd-map` skill: synthesizes patterns into a structured Job Map (YAML + Markdown).
 - `/jtbd-brief` skill: drafts a JTBD-native product brief straight from the .jtbd/ data.
 
+### Fixed
+- Improved preamble checks in all new skills to provide clearer error messages when directories are missing.
+
 ## [1.3.0.1] - 2026-04-27
 
 ### Added
