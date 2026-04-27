@@ -1,17 +1,17 @@
-# jtbd — Jobs to Be Done Skills for Claude Code
+# jtbd: Jobs to Be Done Skills for Claude Code
 
-Turn customer interview transcripts into structured, version-controlled demand evidence. Built on [Moesta's Switch methodology](docs/methodology.md).
+These tools convert raw customer interviews into structured demand evidence you can actually version control. They are based on [Moesta's Switch methodology](docs/methodology.md).
 
 ## What it does
 
-You run a customer interview. You paste the transcript. You get a structured YAML file in your repo that captures:
+After running a customer interview, you paste the transcript into Claude Code. The skills generate a YAML file in your repository containing:
 
-- **The switching timeline** — first thought, passive looking, active looking, deciding, consuming
-- **The four forces** — push, pull, anxiety, habit (each with direct quotes and intensity scores)
-- **A job story** — "When [situation], I want [motivation], so I can [outcome]"
-- **Evidence strength scoring** — how solid is the data from this interview?
+- **The switching timeline:** first thought, passive looking, active looking, deciding, and consuming.
+- **The four forces:** push, pull, anxiety, and habit, complete with direct quotes and intensity scores.
+- **A job story:** formatted as "When [situation], I want [motivation], so I can [outcome]."
+- **Evidence strength scoring:** an assessment of how reliable the interview data actually is.
 
-The output lives in a `.jtbd/` directory committed alongside your code. Your demand evidence is now version-controlled, reviewable, and traceable — just like your source code.
+This output gets saved to a `.jtbd/` directory so you can commit it alongside your project. Your demand evidence becomes reviewable and traceable in the exact same way you manage source code.
 
 ## Quick start
 
@@ -21,7 +21,7 @@ The output lives in a `.jtbd/` directory committed alongside your code. Your dem
 curl -sSL https://raw.githubusercontent.com/philippossavvides/jtbd/main/install.sh | bash
 ```
 
-Or manually:
+Or manually clone it:
 
 ```bash
 git clone https://github.com/philippossavvides/jtbd.git ~/.claude/skills/jtbd
@@ -29,13 +29,13 @@ git clone https://github.com/philippossavvides/jtbd.git ~/.claude/skills/jtbd
 
 ### Try it
 
-Run `/jtbd-switch` in Claude Code with the included example transcript:
+Run `/jtbd-switch` in Claude Code using our example transcript:
 
 ```
 /jtbd-switch examples/sample-transcript.txt
 ```
 
-Or paste your own interview transcript:
+Or just paste your own interview text:
 
 ```
 /jtbd-switch
@@ -54,46 +54,46 @@ your-repo/
 └── ...
 ```
 
-See `demo/.jtbd/` for a fully-populated example with 3 interviews and pattern analysis.
+Check out `demo/.jtbd/` to see a fully populated project with three interviews and pattern analysis.
 
 ## Available skills
 
 | Skill | Status | What it does |
 |-------|--------|-------------|
-| `/jtbd-demo` | Available | 5-minute guided walkthrough of JTBD — learn the framework by seeing it in action |
-| `/jtbd-switch` | Available | Analyze one interview transcript into a structured Switch analysis |
-| `/jtbd-interview` | **Available** | Generate a customized Switch interview script |
-| `/jtbd-patterns` | **Available** | Find patterns across 3+ switch analyses |
-| `/jtbd-pipeline` | **Available** | Batch-process multiple transcripts through the full pipeline |
-| `/jtbd-forces` | Coming soon | Generate an HTML forces diagram |
-| `/jtbd-map` | Coming soon | Synthesize patterns into a job map |
-| `/jtbd-brief` | Coming soon | Generate a product brief from .jtbd/ data |
+| `/jtbd-demo` | Available | 5-minute interactive walkthrough to learn the framework. |
+| `/jtbd-switch` | Available | Analyze a single interview transcript into a structured Switch format. |
+| `/jtbd-interview` | **Available** | Generate a custom Switch interview script. |
+| `/jtbd-patterns` | **Available** | Find patterns across three or more switch analyses. |
+| `/jtbd-pipeline` | **Available** | Batch-process a folder of transcripts through the entire pipeline. |
+| `/jtbd-forces` | Coming soon | Create an HTML forces diagram. |
+| `/jtbd-map` | Coming soon | Synthesize your patterns into a full job map. |
+| `/jtbd-brief` | Coming soon | Draft a product brief straight from the .jtbd/ data. |
 
 ## The idea
 
-Every existing JTBD tool treats research as a standalone activity in a separate app. You analyze in one tool, write specs in another, build in a third. By the time an insight reaches code, it's been diluted.
+Most product research happens in isolated apps. You do the analysis in one place, write the spec somewhere else, and write code in a completely different environment. Insights get lost in translation.
 
-JTBD skills put the research where the code is. The `.jtbd/` directory is a git-native data layer — demand evidence committed alongside the code it justifies. `git blame` your way from a feature back to the interview that demanded it.
+We built JTBD skills to put research right where the code lives. The `.jtbd/` directory acts as a git-native data layer. You can literally `git blame` a feature to see the exact customer interview that justified building it.
 
 ## Works standalone, chains with gstack
 
-JTBD skills require only Claude Code. No other dependencies.
+You only need Claude Code to run these skills. There are no other dependencies.
 
-If you also have [gstack](https://github.com/garrytan/gstack) installed, the skills chain naturally into gstack's workflow:
+If you happen to use [gstack](https://github.com/garrytan/gstack), the skills chain naturally into its workflow:
 
 ```
 /jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-brief → /office-hours → /plan-eng-review → /ship
-
-Or batch-process everything at once: `/jtbd-pipeline path/to/transcripts/`
 ```
+
+You can also run the whole batch at once: `/jtbd-pipeline path/to/transcripts/`
 
 ## Learn JTBD
 
-New to Jobs to Be Done? Run `/jtbd-demo` for a 5-minute interactive walkthrough, or read [docs/methodology.md](docs/methodology.md) for the full methodology guide.
+If you are new to Jobs to Be Done, try running `/jtbd-demo` for a quick interactive tour. We also wrote a [full methodology guide](docs/methodology.md) you can read.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add new skills, improve extraction quality, or contribute example transcripts.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) to learn how to add skills, improve the extraction prompts, or share example transcripts.
 
 ## License
 
