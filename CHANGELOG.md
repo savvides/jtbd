@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0.1] - 2026-04-27
+
+### Added
+- Added Claude command configs for `jtbd-demo` and `jtbd-switch` for editorial reviews
+- Added base `.jtbd/manifest.yml` and `.gitignore` setup for demand evidence tracking
+
 ## [1.3.0] - 2026-04-24
 
 ### Added
