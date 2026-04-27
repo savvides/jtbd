@@ -21,7 +21,7 @@ Check for the `.jtbd/` directory.
 Make sure the `.jtbd/jobs/` directory exists.
 
 ```bash
-[ -d ".jtbd" ] || { echo "Error: .jtbd/ directory not found."; exit 1; }
+[ -d ".jtbd/patterns" ] || { echo "Error: .jtbd/patterns/ directory not found. Run /jtbd-patterns first."; exit 1; }
 mkdir -p .jtbd/jobs/
 ```
 

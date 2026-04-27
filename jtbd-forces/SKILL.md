@@ -19,7 +19,7 @@ Check for the `.jtbd/` directory. If it doesn't exist, tell the user they need t
 Make sure the `.jtbd/forces/` directory exists.
 
 ```bash
-[ -d ".jtbd" ] || { echo "Error: .jtbd/ directory not found. Run /jtbd-switch first."; exit 1; }
+[ -d ".jtbd" ] || { echo "Error: .jtbd/ directory not found. Run /jtbd-switch or /jtbd-patterns first."; exit 1; }
 mkdir -p .jtbd/forces/
 ```
 

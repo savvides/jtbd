@@ -19,7 +19,7 @@ Check for `.jtbd/` directory.
 Make sure the `.jtbd/briefs/` directory exists.
 
 ```bash
-[ -d ".jtbd" ] || { echo "Error: .jtbd/ directory not found."; exit 1; }
+[ -d ".jtbd/jobs" ] || { echo "Error: .jtbd/jobs/ directory not found. Run /jtbd-map first."; exit 1; }
 mkdir -p .jtbd/briefs/
 ```
 
