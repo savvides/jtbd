@@ -1,0 +1,12 @@
+schema_version: 1
+product:
+  name: "Unknown"
+  description: "Unknown product"
+  stage: "pre-product"
+target_user:
+  role: "Unknown"
+  context: "Unknown"
+settings:
+  auto_commit: true
+  gitignore_raw: true
+  evidence_threshold: 6

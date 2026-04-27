@@ -1,0 +1,1 @@
+Read the skill definition at jtbd-demo/SKILL.md and execute it exactly as specified. Pass through any arguments: $ARGUMENTS
