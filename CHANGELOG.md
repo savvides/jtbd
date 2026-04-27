@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0.0] - 2026-04-27
+
+### Added
+- `/jtbd-forces` skill: generates an HTML diagram of the four forces driving a switch.
+- `/jtbd-map` skill: synthesizes patterns into a structured Job Map (YAML + Markdown).
+- `/jtbd-brief` skill: drafts a JTBD-native product brief straight from the .jtbd/ data.
+
 ## [1.3.0.1] - 2026-04-27
 
 ### Added
