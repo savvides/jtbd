@@ -65,9 +65,9 @@ Check out `demo/.jtbd/` to see a fully populated project with three interviews a
 | `/jtbd-interview` | **Available** | Generate a custom Switch interview script. |
 | `/jtbd-patterns` | **Available** | Find patterns across three or more switch analyses. |
 | `/jtbd-pipeline` | **Available** | Batch-process a folder of transcripts through the entire pipeline. |
-| `/jtbd-forces` | Coming soon | Create an HTML forces diagram. |
-| `/jtbd-map` | Coming soon | Synthesize your patterns into a full job map. |
-| `/jtbd-brief` | Coming soon | Draft a product brief straight from the .jtbd/ data. |
+| `/jtbd-forces` | **Available** | Create an HTML forces diagram. |
+| `/jtbd-map` | **Available** | Synthesize your patterns into a full job map. |
+| `/jtbd-brief` | **Available** | Draft a product brief straight from the .jtbd/ data. |
 
 ## The idea
 
