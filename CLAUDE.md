@@ -22,7 +22,8 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 
 ## YAML Schema
 
-Switch analysis files use `schema_version: 1`. See `examples/expected-output.yml` for the full schema. See `demo/.jtbd/` for a populated example project.
+Switch analysis files carry `interviewee`, `timeline`, `forces`, `job_story` and `evidence_strength`.
+See `examples/expected-output.yml` for the full schema. `manifest.yml` and patterns files carry `schema_version: 1`. See `demo/.jtbd/` for a populated example project.
 
 ## Skill routing
 
@@ -45,7 +46,7 @@ YAML example data, and availability claims). CI runs the same command on every p
 and pull request. See TESTING.md for what each check covers and why.
 
 Expectations:
-- When you add a skill, add its `.claude/commands/` wrapper in the same change — the validator requires both.
+- When you add a skill, add `.claude/commands/<name>.md` in the same change. The wrapper must reference the skill its filename names — the validator checks pairing, not just presence.
 - When you add a new file type under `.jtbd/`, add an example to `demo/.jtbd/` and make sure it parses.
 - When you add a check to `scripts/validate.py`, prove it fails on the bug it targets before committing.
 - Never commit a change that makes the validator fail.

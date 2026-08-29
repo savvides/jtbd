@@ -48,4 +48,10 @@ Include the extracted quotes/patterns in the respective quadrants.
 ## Output
 
 Write the generated HTML to `.jtbd/forces/[filename-base].html` using the `Write` tool. (e.g., if input was `sarah-ops.yml`, output is `sarah-ops.html`).
-Inform the user where the file was saved.
+
+Tell the user where the file was saved, then:
+
+> **Next steps:**
+> - Open the diagram in a browser to check it reads clearly
+> - Run `/jtbd-map` to synthesize your patterns into a Job Map
+> - Run `/jtbd-brief` to turn that Job Map into a product brief

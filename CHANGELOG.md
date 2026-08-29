@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- `scripts/validate.py`: structural validation for skill definitions, command wrappers, YAML example data, and availability claims. Run with `python3 scripts/validate.py`; `--self-test` proves the pure helpers still reject what they were written to reject.
+- CI workflow running the validator on every push to `main` and every pull request.
+- `TESTING.md` documenting what is checked and how to add a check.
+- `**Next steps:**` blocks for `/jtbd-forces`, `/jtbd-map` and `/jtbd-brief`, which previously ended without pointing anywhere.
+
+### Fixed
+- Preamble checks in the new skills now name the directory they actually guard and the command that creates it, instead of referring vaguely to `.jtbd/`.
+- `/jtbd-map` frontmatter was displaced off byte 0 by a stray comment leaked from the plan document, and the `/jtbd-map` command wrapper carried the same comment into the slash-command picker.
+- Next-steps chains in `/jtbd-patterns`, `/jtbd-pipeline` and `/jtbd-demo` sent users straight to `/jtbd-brief`, which exits without `.jtbd/jobs/` — a directory only `/jtbd-map` creates.
+- Stale availability markers left on skills that already ship.
+- The gstack chain in the README skipped two steps, so a user following it reached a skill that exits immediately.
+- `/jtbd-forces` described each force as one quote plus intensity; forces are lists of entries whose quote may be null.
+- `CLAUDE.md` and `CONTRIBUTING.md` claimed all `.jtbd/` files carry `schema_version: 1`. Switch analyses and job maps do not.
+
 ## [1.4.0.0] - 2026-04-27
 
 ### Added

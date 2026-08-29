@@ -60,4 +60,9 @@ Write to `.jtbd/jobs/[job-slug].md`. Format as a clean document with a Markdown 
 | [Step 1] | [Friction] | [Opportunity] |
 ```
 
-Inform the user where both files were saved.
+Tell the user where both files were saved, then:
+
+> **Next steps:**
+> - Review the Job Map and correct any step you would not defend to a customer
+> - Run `/jtbd-brief` to turn this Job Map into a product brief
+> - Run `/jtbd-forces` to visualize the forces behind this job

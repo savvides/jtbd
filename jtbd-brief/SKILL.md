@@ -54,4 +54,11 @@ Structure the brief exactly like this:
 ## Output
 
 Write the generated Markdown to `.jtbd/briefs/[feature-slug].md` using the `Write` tool.
-Inform the user where the file was saved.
+
+Tell the user where the file was saved, then:
+
+> **Next steps:**
+> - Check every feature proposal traces back to a friction point in the Job Map
+> - Run more interviews if the brief leans on thin evidence
+> - If using gstack: run `/office-hours` to turn this brief into a design doc
+
