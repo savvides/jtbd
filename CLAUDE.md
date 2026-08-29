@@ -42,8 +42,9 @@ Key routing rules:
 ## Testing
 
 Run: `python3 scripts/validate.py` (validates skill frontmatter, command wrappers,
-YAML example data, and availability claims). CI runs the same command on every push
-and pull request. See TESTING.md for what each check covers and why.
+YAML example data, and availability claims). CI runs `--self-test` and then the
+validator, on every push to `main` and every pull request. See TESTING.md for what
+each check covers and why.
 
 Expectations:
 - When you add a skill, add `.claude/commands/<name>.md` in the same change. The wrapper must reference the skill its filename names — the validator checks pairing, not just presence.

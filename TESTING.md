@@ -43,20 +43,29 @@ pull request (`.github/workflows/test.yml`).
 - Every skill directory has its own wrapper
 - File ends with a newline
 
-**Example and demo data** (every `.yml` / `.yaml`)
+**Example and demo data** (every `.yml` / `.yaml` outside `.github/`)
 - Parses. The `.jtbd/` directory is version-controlled evidence, and the machine
   readable half is worthless if it does not load.
-- Switch analyses carry their documented top-level keys (`interviewee`, `timeline`,
-  `forces`, `job_story`, `evidence_strength`), matching `examples/expected-output.yml`.
+- Each document carries the keys its shape documents: switch analyses
+  (`interviewee`, `timeline`, `forces`, `job_story`, `evidence_strength`), patterns
+  files (`schema_version`, `clusters`, `force_patterns`), job maps (`job`, `steps`),
+  and `manifest.yml` (`schema_version`, `product`, `target_user`, `settings`).
+  Shape is read from the document's own content where it can be, so a non-switch
+  file living under `switches/` is not forced into the wrong contract.
 - Parse errors report type and position only, never the offending source line.
   These files hold interviewee names and verbatim quotes, and CI logs outlive the
   file they came from.
 
 **Availability claims** (every `.md`)
 - No skill that ships in this repo is advertised as "coming soon", in prose or in a
-  README table cell. Dated plans and specs under `docs/superpowers/` are exempt —
-  they are a historical record.
+  README table cell.
 - Every shipped skill is listed in both `README.md` and `CLAUDE.md`.
+
+  Three escapes exist, because truthful prose can name a skill and "coming soon" on
+  one line. `CHANGELOG.md` and `docs/superpowers/` are exempt outright — they are
+  historical records. Elsewhere, a line reading as past tense ("no longer", "was
+  marked", "previously") is allowed, and `<!-- validate: allow-coming-soon -->` on
+  the line is an explicit opt-out.
 
 The file list comes from `git ls-files` plus untracked-but-not-ignored files, so a
 skill you have created and not yet staged is still validated.
@@ -66,8 +75,12 @@ skill you have created and not yet staged is still validated.
 Add a `check_*(files, skill_dirs)` function returning the number of files it
 inspected, add it to `CHECKS`, and report problems with `fail(path, message)`.
 
-Then prove it works: break the thing it checks, confirm the script fails, and
-restore. A check that never fails is not a check. If the check has a pure helper
-(a regex, a parser), add an assertion to `self_test()` so CI proves it still
-rejects what it was written to reject — the manual proof only covers the day you
-wrote it.
+Then add a case to `self_test()`. It builds throwaway git repos with
+`_run_fixture()` and asserts your check fires, so CI proves the behaviour rather
+than the regex — breaking a `check_*` body fails the self-test, not just breaking a
+pattern. A manual proof only covers the day you wrote it.
+
+`self_test()` reports failures explicitly instead of using `assert`, because
+`python3 -O` strips assertions. Keep it that way: a self-test that passes under
+`-O` while testing nothing is the exact bug this file exists to catch, and this
+suite shipped with it once.
