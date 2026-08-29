@@ -26,7 +26,8 @@ pull request (`.github/workflows/test.yml`).
 
 ## What it checks
 
-**Skill definitions** (`**/SKILL.md`)
+**Skill definitions** (`*/SKILL.md`, top level only — a wrapper references a
+single path segment, so a nested `SKILL.md` could never satisfy the pairing check)
 - Frontmatter starts at byte 0, so the loader can actually read it
 - Frontmatter is closed by a `---` line of its own — a horizontal rule or a setext
   heading underline in the body cannot masquerade as the closing fence
@@ -72,13 +73,19 @@ skill you have created and not yet staged is still validated.
 
 ## Adding a check
 
-Add a `check_*(files, skill_dirs)` function returning the number of files it
-inspected, add it to `CHECKS`, and report problems with `fail(path, message)`.
+Add a `check_*(files, skill_dirs)` function returning the set of repo-relative
+paths it inspected, add it to `CHECKS`, and report problems with `fail(path, message)`.
 
 Then add a case to `self_test()`. It builds throwaway git repos with
-`_run_fixture()` and asserts your check fires, so CI proves the behaviour rather
-than the regex — breaking a `check_*` body fails the self-test, not just breaking a
-pattern. A manual proof only covers the day you wrote it.
+`_run_fixture()` and asserts your check fires, so CI proves behaviour rather than
+pattern-matching. A manual proof only covers the day you wrote it.
+
+Fixtures currently pin: displaced frontmatter, a name/directory mismatch, a missing
+trailing newline, a skill with no wrapper, a wrapper whose line 1 runs a different
+skill, a dangling `SKILL.md` reference, a `Coming soon` table cell, a neighbouring
+clause trying to defuse one, unparseable YAML, an incomplete switch analysis, a
+switch analysis missing `interviewee`, and an unadvertised skill. Disabling any of
+those check bodies fails the self-test. Whole runs take about 0.4s.
 
 `self_test()` reports failures explicitly instead of using `assert`, because
 `python3 -O` strips assertions. Keep it that way: a self-test that passes under

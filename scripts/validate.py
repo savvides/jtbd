@@ -40,6 +40,7 @@ SKILL_REF = re.compile(r"\b([A-Za-z0-9_-][\w.-]*)/SKILL\.md")
 FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*(?:\n|\Z)", re.S)
 # Prose describing a past availability state, rather than advertising a current one.
 PAST_TENSE = re.compile(r"no longer|previously|used to be|was marked|removed the", re.I)
+SEGMENT = re.compile(r"[|.]")
 ALLOW_MARKER = "<!-- validate: allow-coming-soon -->"
 
 # Documented shapes. A document is classified by its own content where possible,
@@ -206,7 +207,7 @@ def classify_yaml(rel, doc):
     """Name the documented shape this file must satisfy, or None."""
     if not isinstance(doc, dict):
         return None
-    if "interviewee" in doc or rel == "examples/expected-output.yml":
+    if "interviewee" in doc or "/switches/" in rel or rel == "examples/expected-output.yml":
         return "switch", SWITCH_KEYS
     if rel.endswith("manifest.yml"):
         return "manifest", MANIFEST_KEYS
@@ -261,8 +262,11 @@ def check_availability(files, skill_dirs):
         for number, line in enumerate(text.splitlines(), 1):
             if "coming soon" not in line.lower():
                 continue
-            if ALLOW_MARKER in line or PAST_TENSE.search(line):
-                continue  # describing a past state, not making a claim
+            # Scope the past-tense escape to the segment holding the phrase. A
+            # neighbouring table cell or clause must not defuse a live claim.
+            segment = next((s for s in SEGMENT.split(line) if "coming soon" in s.lower()), line)
+            if ALLOW_MARKER in line or PAST_TENSE.search(segment):
+                continue
             for skill in sorted(skill_dirs):
                 if skill in line:
                     fail(f"{rel}:{number}",
@@ -386,13 +390,26 @@ def self_test():
     rejects({**_base_fixture(), "data/x.yml": 'a: "b "c" d"\n'},
             "does not parse", "unparseable YAML not caught")
     rejects({**_base_fixture(), "d/switches/s.yml": "interviewee: x\n"},
-            "missing top-level", "incomplete switch analysis not caught")
+            "switch is missing top-level", "incomplete switch analysis not caught")
+    rejects({**_base_fixture(), "d/switches/s.yml": "subject: x\njob_story: y\n"},
+            "switch is missing top-level", "switch analysis without 'interviewee' not caught")
+    rejects({**_base_fixture(),
+             ".claude/commands/alpha.md": WRAPPER.format(name="alpha") + "see ghost/SKILL.md\n"},
+            "which does not exist", "dangling SKILL.md reference not caught")
+    rejects({**_base_fixture(), "alpha/SKILL.md": SKILL.format(name="alpha").rstrip("\n")},
+            "missing trailing newline", "missing trailing newline not caught")
     rejects({**_base_fixture(), "CLAUDE.md": "nothing here\n"},
             "never lists it", "unadvertised skill not caught")
 
     require(_run_fixture({**_base_fixture(),
                           "CHANGELOG.md": "- `/alpha` is no longer marked coming soon.\n"}) == [],
             "changelog describing a past state was rejected")
+    require(_run_fixture({**_base_fixture(),
+                          "README.md": "`/alpha` is no longer coming soon.\n"}) == [],
+            "past-tense prose in a non-exempt file was rejected")
+    rejects({**_base_fixture(),
+             "README.md": "| `/alpha` | Coming soon | docs no longer apply |\n"},
+            "marked 'coming soon'", "neighbouring clause defused a live claim")
     require(_run_fixture({**_base_fixture(),
                           "TESTING.md": f"`/alpha` coming soon {ALLOW_MARKER}\n"}) == [],
             "explicit allow marker was ignored")
