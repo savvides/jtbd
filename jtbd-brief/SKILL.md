@@ -15,7 +15,7 @@ allowed-tools:
 
 ## Preamble
 
-Check for `.jtbd/` directory.
+Check for the `.jtbd/jobs/` directory. If it doesn't exist, tell the user they need to run `/jtbd-map` first and exit.
 Make sure the `.jtbd/briefs/` directory exists.
 
 ```bash
@@ -32,7 +32,7 @@ Use the `Read` tool to read the Job Map file. Ask the user if they also want to 
 
 ## Process Data
 
-Instruct the LLM to draft a "JTBD-Native" Product Brief. The brief must explicitly link proposed features or interventions back to the friction points identified in the Job Map.
+Draft a "JTBD-Native" Product Brief. The brief must explicitly link proposed features or interventions back to the friction points identified in the Job Map.
 
 Structure the brief exactly like this:
 ```markdown

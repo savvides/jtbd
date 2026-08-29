@@ -197,9 +197,9 @@ Options: A) Let's do it  B) I'll come back later
 > **The full workflow:**
 > 1. `/jtbd-demo` — You just did this. Understand the framework.
 > 2. `/jtbd-switch` — Analyze one interview at a time.
-> 3. `/jtbd-patterns` — After 3+ interviews, find what repeats. (Coming soon)
-> 4. `/jtbd-forces` — Visualize the forces as an HTML diagram. (Coming soon)
-> 5. `/jtbd-brief` — Generate a product brief from your research. (Coming soon)
+> 3. `/jtbd-patterns` — After 3+ interviews, find what repeats.
+> 4. `/jtbd-forces` — Visualize the forces as an HTML diagram.
+> 5. `/jtbd-brief` — Generate a product brief from your research.
 >
 > Start with step 2. One real interview. That's the assignment.
 

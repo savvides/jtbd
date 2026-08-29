@@ -82,7 +82,7 @@ You only need Claude Code to run these skills. There are no other dependencies.
 If you happen to use [gstack](https://github.com/garrytan/gstack), the skills chain naturally into its workflow:
 
 ```
-/jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-brief → /office-hours → /plan-eng-review → /ship
+/jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-forces → /jtbd-map → /jtbd-brief → /office-hours → /plan-eng-review → /ship
 ```
 
 You can also run the whole batch at once: `/jtbd-pipeline path/to/transcripts/`

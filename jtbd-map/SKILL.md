@@ -1,4 +1,3 @@
-<!-- jtbd-map/SKILL.md -->
 ---
 name: jtbd-map
 version: 1.0.0
@@ -17,7 +16,7 @@ allowed-tools:
 
 ## Preamble
 
-Check for the `.jtbd/` directory.
+Check for the `.jtbd/patterns/` directory. If it doesn't exist, tell the user they need to run `/jtbd-patterns` first and exit.
 Make sure the `.jtbd/jobs/` directory exists.
 
 ```bash
@@ -34,7 +33,7 @@ Use the `Read` tool to read the patterns file.
 
 ## Process Data
 
-Instruct the LLM to deduce the chronological steps of the dominant job identified in the patterns file. For each step, identify friction points and propose high-level opportunities based on the clustered jobs, emerging signals, and timeline patterns.
+Deduce the chronological steps of the dominant job identified in the patterns file. For each step, identify friction points and propose high-level opportunities based on the clustered jobs, emerging signals, and timeline patterns.
 
 ## Output Generation
 
