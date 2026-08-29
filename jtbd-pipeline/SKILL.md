@@ -267,5 +267,6 @@ git commit -m "jtbd: pipeline analysis of {N} interviews"
 > - Review individual switch files in `.jtbd/switches/`
 > - Run `/jtbd-interview` to generate scripts targeting evidence gaps
 > - Run `/jtbd-forces` to generate a visual forces diagram
-> - Run `/jtbd-brief` to generate a product brief from your evidence
+> - Run `/jtbd-map` to synthesize the patterns into a Job Map
+> - Run `/jtbd-brief` to turn that Job Map into a product brief
 > - If using gstack: run `/office-hours` to turn your brief into a design doc

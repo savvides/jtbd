@@ -297,4 +297,5 @@ If the commit fails, write the file but skip the commit. Tell the user: "File wr
 > - Run more interviews targeting the evidence gaps above, use `/jtbd-interview` to generate a script
 > - Run `/jtbd-patterns` again after new interviews to see how patterns sharpen
 > - Run `/jtbd-forces` to generate an HTML forces diagram
-> - Run `/jtbd-brief` to generate a product brief from your evidence
+> - Run `/jtbd-map` to synthesize these patterns into a Job Map
+> - Run `/jtbd-brief` to turn that Job Map into a product brief

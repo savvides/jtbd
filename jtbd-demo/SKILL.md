@@ -199,7 +199,8 @@ Options: A) Let's do it  B) I'll come back later
 > 2. `/jtbd-switch` — Analyze one interview at a time.
 > 3. `/jtbd-patterns` — After 3+ interviews, find what repeats.
 > 4. `/jtbd-forces` — Visualize the forces as an HTML diagram.
-> 5. `/jtbd-brief` — Generate a product brief from your research.
+> 5. `/jtbd-map` — Synthesize the patterns into a Job Map.
+> 6. `/jtbd-brief` — Turn that Job Map into a product brief.
 >
 > Start with step 2. One real interview. That's the assignment.
 
