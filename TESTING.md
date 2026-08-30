@@ -16,6 +16,15 @@ python3 scripts/validate.py
 
 Exits 0 when everything passes, 1 with a list of failures otherwise.
 
+```bash
+python3 scripts/validate.py --self-test
+```
+
+Runs the fixture suite instead of the repo, and returns before reading a single
+repo file. Run it whenever you touch `scripts/validate.py`: a plain
+`validate.py` run never exercises a fixture, so a broken one passes locally and
+fails in CI.
+
 PyYAML is required and the script exits with an install hint without it. That is
 deliberate: an earlier version degraded to a partial no-op when PyYAML was absent
 and still printed "All checks passed", which is the one failure mode a validator

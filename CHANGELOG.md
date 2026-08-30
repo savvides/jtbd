@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - `CONTRIBUTING.md` now states that a skill needs a paired `.claude/commands/` wrapper and points at the validator to run before opening a PR.
+- The pull request test plan now asks you to run the validator instead of a one-off `yaml.safe_load` snippet against a single file, and `TESTING.md` documents `--self-test` as a command you run yourself, not just something CI does.
 
 ## [1.4.0.0] - 2026-04-27
 
