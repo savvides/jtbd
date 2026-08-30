@@ -2,22 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.5.0.0] - 2026-08-29
 
 ### Added
-- `scripts/validate.py`: structural validation for skill definitions, command wrappers, YAML example data, and availability claims. Run with `python3 scripts/validate.py`; `--self-test` proves the pure helpers still reject what they were written to reject.
-- CI workflow running the validator on every push to `main` and every pull request.
-- `TESTING.md` documenting what is checked and how to add a check.
-- `**Next steps:**` blocks for `/jtbd-forces`, `/jtbd-map` and `/jtbd-brief`, which previously ended without pointing anywhere.
+- `python3 scripts/validate.py` checks the repo's structure before you commit: skill frontmatter, command wrappers, YAML example data, and availability claims. `--self-test` proves each check still fires. Run it before opening a PR.
+- CI runs the self-test and the validator on every push to `main` and every pull request, so a broken skill definition is caught before review.
+- `TESTING.md` describing every check, the escapes available, and how to add a new one.
+- `/jtbd-forces`, `/jtbd-map` and `/jtbd-brief` now end by telling you what to run next, like the older skills do.
 
 ### Fixed
-- Preamble checks in the new skills now name the directory they actually guard and the command that creates it, instead of referring vaguely to `.jtbd/`.
-- `/jtbd-map` frontmatter was displaced off byte 0 by a stray comment leaked from the plan document, and the `/jtbd-map` command wrapper carried the same comment into the slash-command picker.
-- Next-steps chains in `/jtbd-patterns`, `/jtbd-pipeline` and `/jtbd-demo` sent users straight to `/jtbd-brief`, which exits without `.jtbd/jobs/` — a directory only `/jtbd-map` creates.
-- Stale availability markers left on skills that already ship.
-- The gstack chain in the README skipped two steps, so a user following it reached a skill that exits immediately.
-- `/jtbd-forces` described each force as one quote plus intensity; forces are lists of entries whose quote may be null.
-- `CLAUDE.md` and `CONTRIBUTING.md` claimed all `.jtbd/` files carry `schema_version: 1`. Switch analyses and job maps do not.
+- `/jtbd-map` would not load: a stray comment sat above its frontmatter, and the same comment displaced its description in the slash-command picker.
+- Following the next steps printed by `/jtbd-patterns`, `/jtbd-pipeline` or `/jtbd-demo` sent you to `/jtbd-brief`, which exits immediately without a job map. `/jtbd-map` is now named in each chain, as it already was in the README workflow.
+- `/jtbd-map` and `/jtbd-brief` told you to run the wrong command when their input directory was missing, naming `.jtbd/` instead of the directory they actually need.
+- `/jtbd-forces` described each force as a single quote plus intensity. Forces are lists, and a quote is empty when the force was inferred rather than stated.
+- Skills that ship were still advertised as unavailable in three places.
+- `CLAUDE.md` and `CONTRIBUTING.md` said every `.jtbd/` file carries `schema_version: 1`. Switch analyses and job maps do not.
+
+### Changed
+- `CONTRIBUTING.md` now states that a skill needs a paired `.claude/commands/` wrapper and points at the validator to run before opening a PR.
 
 ## [1.4.0.0] - 2026-04-27
 
