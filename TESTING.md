@@ -115,7 +115,16 @@ repo layout fact rather than a defect.
   `jtbd: pipeline analysis of {N} interviews`, and an unsubstituted
   `git add .jtbd/switches/{filename}.yml` fails its pathspec and stages nothing, which
   is the v1.5.0.1 bug all over again. Runnable lines use `<...>` plus a sentence telling
-  the reader to substitute. Braces in prose, or in a non-bash block, are untouched.
+  the reader to substitute. Braces in prose, or in a non-bash block, are untouched, and
+  so are brace expansion (`{switches,patterns}`) and format strings (`{%an}`) — the
+  pattern matches a brace-wrapped bare identifier only, with fixtures pinning all four
+  of those legitimate forms, because a check that fires on correct code gets deleted.
+
+  Be clear about what this buys. `<N>` is exactly as copyable as `{N}`; the check
+  enforces a spelling, not a substitution, and cannot tell whether the model actually
+  filled the value in. What it does is stop the placeholder style that reads as
+  fill-me-in prose from appearing on a line that runs. The sentence next to each command
+  is the part doing the real work.
 
 **Availability claims** (every `.md`)
 - Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has

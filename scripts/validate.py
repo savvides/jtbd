@@ -49,6 +49,12 @@ FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*(?:\n|\Z)", re.S)
 PAST_TENSE = re.compile(r"no longer|previously|used to be|was marked|removed the", re.I)
 SEGMENT = re.compile(r"[|.]")
 ALLOW_MARKER = "<!-- validate: allow-coming-soon -->"
+
+# A fill-me-in marker: braces around a bare identifier, as the prose in these skills
+# writes {N} and {filename}. Deliberately does NOT match brace expansion
+# ({switches,patterns} — a comma) or a git format string ({%an} — a percent), both of
+# which are ordinary git usage.
+GIT_PLACEHOLDER = re.compile(r"\{[A-Za-z_][A-Za-z0-9_ -]*\}")
 # The plugin manifest is how every installed user reaches these skills. A path that
 # does not resolve drops one command with no error, so it is checked here as well as
 # by `claude plugin validate` in CI: contributors without the CLI still catch it.
@@ -428,9 +434,14 @@ def check_git_placeholders(files, skill_dirs):
             stripped = line.strip()
             if not stripped.startswith("git "):
                 continue
-            if "{" in stripped or "}" in stripped:
-                fail(rel, f"line {number}: git command carries a {{...}} placeholder that "
-                          f"gets run literally; use <...> and say to substitute it")
+            # A brace-wrapped identifier only. Brace expansion ({switches,patterns}) and
+            # format strings ({%an}) are ordinary git usage and must pass, or the next
+            # contributor deletes the check instead of the placeholder.
+            found = GIT_PLACEHOLDER.search(stripped)
+            if found:
+                fail(rel, f"line {number}: git command carries the placeholder "
+                          f"{found.group(0)}, which gets run literally; use <...> and "
+                          f"say to substitute it")
     return read
 
 
@@ -587,7 +598,7 @@ def self_test():
     rejects({**_base_fixture(),
              "alpha/SKILL.md": SKILL.format(name="alpha")
                                + '\n```bash\ngit commit -m "x {N} y"\n```\n'},
-            "placeholder that", "literal {...} in a git command not caught")
+            "carries the placeholder", "literal {...} in a git command not caught")
     require(_run_fixture({**_base_fixture(),
                           "alpha/SKILL.md": SKILL.format(name="alpha")
                           + '\n```bash\ngit commit -m "x <N> y"\n```\n'}) == [],
@@ -596,6 +607,14 @@ def self_test():
                           "alpha/SKILL.md": SKILL.format(name="alpha")
                           + '\nprose may say {N} freely\n\n```python\nd = {"k": 1}\n```\n'}) == [],
             "braces outside a bash git line were rejected")
+    # The false positive is the real risk: a check that fires on correct git usage gets
+    # deleted by the next contributor, and the protection goes with it.
+    for ok in ['git add .jtbd/{switches,patterns}', "git log --format='%h {%s}'",
+               'git checkout -- {a,b}', 'git log --pretty=format:"{%an}"']:
+        require(_run_fixture({**_base_fixture(),
+                              "alpha/SKILL.md": SKILL.format(name="alpha")
+                              + f'\n```bash\n{ok}\n```\n'}) == [],
+                f"legitimate git usage was rejected: {ok}")
 
     require(_run_fixture({**_base_fixture(),
                           "CHANGELOG.md": "- `/alpha` is no longer marked coming soon.\n"}) == [],
