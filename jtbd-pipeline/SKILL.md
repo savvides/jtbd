@@ -57,9 +57,12 @@ else
   echo "SWITCH_COUNT: 0"
 fi
 
-# Detect jtbd skill locations
+# Detect jtbd skill locations. ${CLAUDE_PLUGIN_ROOT} comes first: plugin installs land
+# under ~/.claude/plugins/, which matches neither branch below.
 _JTBD_SKILLS=""
-if [ -d "$HOME/.claude/skills/jtbd" ]; then
+if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/jtbd-switch/SKILL.md" ]; then
+  _JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"
+elif [ -d "$HOME/.claude/skills/jtbd" ]; then
   _JTBD_SKILLS="$HOME/.claude/skills/jtbd"
 elif [ -n "$_ROOT" ] && [ -f "$_ROOT/jtbd-switch/SKILL.md" ]; then
   _JTBD_SKILLS="$_ROOT"

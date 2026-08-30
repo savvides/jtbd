@@ -30,8 +30,13 @@ deliberate: an earlier version degraded to a partial no-op when PyYAML was absen
 and still printed "All checks passed", which is the one failure mode a validator
 must never have.
 
-CI runs the self-test and then the validator on every push to `main` and every
-pull request (`.github/workflows/test.yml`).
+CI runs the self-test, then the validator, then `claude plugin validate` against both
+manifests, on every push to `main` and every pull request (`.github/workflows/test.yml`).
+
+The job is named `run-lint`, and that name is load-bearing. GitHub reports the job id as
+the status check context, and the "Protect Main Branch" ruleset requires a check called
+`run-lint`. Rename the job and the required check never reports, which leaves every pull
+request to `main` permanently unmergeable through the normal path.
 
 ## What it checks
 
@@ -122,10 +127,14 @@ pattern-matching. A manual proof only covers the day you wrote it.
 
 Fixtures currently pin: displaced frontmatter, a name/directory mismatch, a missing
 trailing newline, a skill with no wrapper, a wrapper whose line 1 runs a different
-skill, a dangling `SKILL.md` reference, a `Coming soon` table cell, a neighbouring
-clause trying to defuse one, unparseable YAML, an incomplete switch analysis, a
-switch analysis missing `interviewee`, and an unadvertised skill. Disabling any of
-those check bodies fails the self-test. Whole runs take about 0.4s.
+skill, a wrapper using the pre-v1.6.0.0 bare relative path, a dangling `SKILL.md`
+reference, a `Coming soon` table cell, a neighbouring clause trying to defuse one,
+unparseable YAML, an incomplete switch analysis, a switch analysis missing
+`interviewee`, an unadvertised skill, and six ways the plugin manifest can silently
+drop a command: absent, malformed JSON, no `skills` list, an entry that is not
+`./`-relative, an entry that resolves to no `SKILL.md`, and a skill on disk the list
+omits. Disabling any of those check bodies fails the self-test. Whole runs take about
+0.7s.
 
 `self_test()` reports failures explicitly instead of using `assert`, because
 `python3 -O` strips assertions. Keep it that way: a self-test that passes under

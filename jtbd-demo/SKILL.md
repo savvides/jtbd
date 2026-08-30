@@ -14,10 +14,14 @@ allowed-tools:
 ## Preamble
 
 ```bash
-# Find the jtbd skills root directory
+# Find the jtbd skills root directory.
+# Plugin installs land under ~/.claude/plugins/, which is neither the repo root nor
+# the pre-v1.6.0.0 clone path, so ${CLAUDE_PLUGIN_ROOT} has to be probed first or the
+# demo dead-ends for everyone who installed the supported way.
 _JTBD_SKILLS=""
+[ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -d "$CLAUDE_PLUGIN_ROOT/jtbd-switch" ] && _JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"
 _ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-[ -n "$_ROOT" ] && [ -d "$_ROOT/jtbd-switch" ] && _JTBD_SKILLS="$_ROOT"
+[ -z "$_JTBD_SKILLS" ] && [ -n "$_ROOT" ] && [ -d "$_ROOT/jtbd-switch" ] && _JTBD_SKILLS="$_ROOT"
 [ -z "$_JTBD_SKILLS" ] && [ -d "$HOME/.claude/skills/jtbd/jtbd-switch" ] && _JTBD_SKILLS="$HOME/.claude/skills/jtbd"
 echo "JTBD_SKILLS: ${_JTBD_SKILLS:-NOT_FOUND}"
 
@@ -30,7 +34,7 @@ _DEMO_OK="yes"
 echo "DEMO_ASSETS: $_DEMO_OK"
 ```
 
-If `DEMO_ASSETS` is `no`: tell the user "Demo files not found. Make sure jtbd is installed correctly. Try: `git clone https://github.com/savvides/jtbd.git ~/.claude/skills/jtbd`" and stop.
+If `DEMO_ASSETS` is `no`: tell the user "Demo files not found. jtbd installs as a Claude Code plugin — run `/plugin marketplace add savvides/jtbd` then `/plugin install jtbd@jtbd`, and restart Claude Code or run `/reload-plugins`. If the plugin is already installed, this is a bug: please open an issue at https://github.com/savvides/jtbd/issues." and stop. Do not tell the user to clone the repo into `~/.claude/skills/` — that path does not register skills, which is the bug v1.6.0.0 fixed.
 
 ## The Demo
 

@@ -9,9 +9,13 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 - `/jtbd-interview` — Generate a customized Switch interview script
 - `/jtbd-patterns` — Find cross-interview patterns across 3+ switch analyses
 - `/jtbd-pipeline` — Batch-process multiple transcripts through the full analysis pipeline
-- `/jtbd-forces` — Generates an HTML diagram of the four forces
-- `/jtbd-map` — Synthesizes patterns into a structured Job Map (YAML + Markdown)
-- `/jtbd-brief` — Drafts a JTBD-native product brief from Job Map data
+- `/jtbd-forces` (Preview) — Generates an HTML diagram of the four forces
+- `/jtbd-map` (Preview) — Synthesizes patterns into a structured Job Map (YAML + Markdown)
+- `/jtbd-brief` (Preview) — Drafts a JTBD-native product brief from Job Map data
+
+The three Preview skills run, but `/jtbd-map` emits a schema that does not carry every
+field `/jtbd-brief` requires, so on the default path part of a generated brief has no
+source in the user's data. README states this for users; TODOS.md tracks the fix.
 
 ## Architecture
 

@@ -36,6 +36,25 @@ of eight times. Add a validator check that the eight preambles stay in step.
 
 Start at `jtbd-switch/SKILL.md` lines 19-50, which is the reference preamble.
 
+v1.6.0.1 added a `${CLAUDE_PLUGIN_ROOT}` probe to `jtbd-demo` and `jtbd-pipeline`, the
+only two preambles that resolve a skills root. That is the fix in two places, not the
+extraction — it is exactly the duplication this item exists to remove, and the next
+skill that needs an asset path will copy it a third time.
+
+### The plugin install path has never been verified end to end
+**Priority:** P0
+**Found:** v1.6.0.0 ship
+
+v1.6.0.0's PR carried one unchecked item and it is still unchecked: install the plugin
+from a clean machine and confirm all eight commands register. CI cannot cover it —
+`claude plugin validate` checks the manifests parse and resolve, not that the real
+loader registers a command. Every failure mode this release fixed is silent, so a green
+CI run is not evidence the install works.
+
+Run `/plugin marketplace add savvides/jtbd`, then `/plugin install jtbd@jtbd`, restart,
+and confirm all eight `/jtbd-*` commands appear and `/jtbd-demo` finds its assets. Until
+someone does, v1.6.0.0's central claim is untested.
+
 ### Skills are prompts, and no eval harness covers them
 **Priority:** P2
 **Found:** v1.5.0.0 ship

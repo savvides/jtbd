@@ -10,7 +10,7 @@
       "name": "jtbd",
       "source": "./",
       "description": "Turn customer interview transcripts into structured, version-controlled demand evidence using Moesta's Switch methodology.",
-      "version": "1.6.0.0",
+      "version": "1.6.0.1",
       "author": { "name": "Philippos Savvides" }
     }
   ]
