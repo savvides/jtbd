@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.6.0.1] - 2026-08-30
 
 ### Fixed
-- **`/jtbd-demo` dead-ended for everyone who installed the plugin.** Its preamble looked for the example transcript and demo data in the jtbd repo root or in `~/.claude/skills/jtbd/`. A plugin install lands under `~/.claude/plugins/`, so a user following the README — install the plugin, run `/jtbd-demo` — got "Demo files not found" and stopped. Both `/jtbd-demo` and `/jtbd-pipeline` now check `${CLAUDE_PLUGIN_ROOT}` first and fall back to the repo root, so the demo works from any directory.
+- **`/jtbd-demo` dead-ended for everyone who installed the plugin.** Its preamble looked for the example transcript and demo data in the jtbd repo root or in `~/.claude/skills/jtbd/`. A plugin install lands under `~/.claude/plugins/`, so a user following the README — install the plugin, run `/jtbd-demo` — got "Demo files not found" and stopped. Both `/jtbd-demo` and `/jtbd-pipeline` now check `${CLAUDE_PLUGIN_ROOT}` first and fall back to the repo root. Verified against a plugin root built to the layout a `source: "./"` plugin install produces: `DEMO_ASSETS: yes` from a directory outside any git repo, where the old preamble reported `NOT_FOUND`. Working inside the repo still resolves to the repo root. A real `/plugin install` remains unverified — see TODOS.md.
 - The message `/jtbd-demo` printed when it could not find its files told you to `git clone` the repo into `~/.claude/skills/jtbd`. That is the install v1.6.0.0 removed for registering nothing, so the recovery advice rebuilt the broken state. It now names the two plugin commands and points at the issue tracker.
 
 ### For contributors

@@ -127,14 +127,17 @@ pattern-matching. A manual proof only covers the day you wrote it.
 
 Fixtures currently pin: displaced frontmatter, a name/directory mismatch, a missing
 trailing newline, a skill with no wrapper, a wrapper whose line 1 runs a different
-skill, a wrapper using the pre-v1.6.0.0 bare relative path, a dangling `SKILL.md`
+skill, a dangling `SKILL.md`
 reference, a `Coming soon` table cell, a neighbouring clause trying to defuse one,
 unparseable YAML, an incomplete switch analysis, a switch analysis missing
 `interviewee`, an unadvertised skill, and six ways the plugin manifest can silently
 drop a command: absent, malformed JSON, no `skills` list, an entry that is not
 `./`-relative, an entry that resolves to no `SKILL.md`, and a skill on disk the list
-omits. Disabling any of those check bodies fails the self-test. Whole runs take about
-0.7s.
+omits. Disabling any of those check bodies fails the self-test.
+
+Separately, and not via a fixture, `self_test()` asserts the `WRAPPER_LINE1` regex
+directly against the wrapper line 1 forms it must reject: blank, a comment, a heading,
+a parent traversal, and the pre-v1.6.0.0 bare relative path. Whole runs take about 0.7s.
 
 `self_test()` reports failures explicitly instead of using `assert`, because
 `python3 -O` strips assertions. Keep it that way: a self-test that passes under
