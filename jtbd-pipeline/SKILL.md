@@ -235,17 +235,26 @@ If fewer than 3 total switch analyses: Skip patterns with a note: "Only {N} swit
 
 ## Commit and Summary
 
-1. Stage all new files:
+1. Stage all new files. Add directories rather than globs: with fewer than 3
+transcripts, pattern analysis is skipped and `.jtbd/patterns/` never exists, and an
+unmatched glob aborts the whole `git add` so nothing at all is staged.
 
 ```bash
-git add .jtbd/switches/*.yml .jtbd/patterns/*.yml .jtbd/manifest.yml .jtbd/.gitignore
+git add .jtbd/manifest.yml .jtbd/.gitignore
+[ -d .jtbd/switches ] && git add .jtbd/switches
+[ -d .jtbd/patterns ] && git add .jtbd/patterns
+git diff --cached --quiet && echo "STAGED: none" || echo "STAGED: $(git diff --cached --name-only | wc -l | tr -d ' ')"
 ```
 
-2. If `GIT` is `yes` and the manifest has `auto_commit: true`:
+2. If `GIT` is `yes` and the manifest has `auto_commit: true`, and `STAGED` is not
+`none`:
 
 ```bash
 git commit -m "jtbd: pipeline analysis of {N} interviews"
 ```
+
+If `STAGED` is `none`, do not commit and do not report the run as committed. Tell the
+user the files were written but nothing was staged, and show them the paths.
 
 3. Present the final summary:
 
@@ -255,6 +264,7 @@ git commit -m "jtbd: pipeline analysis of {N} interviews"
 > **Switch analyses:** {M} created, {K} skipped
 > **Total in .jtbd/switches/:** {total} (including pre-existing)
 > **Patterns:** {generated | skipped (need 3+)}
+> **Committed:** {yes | no, files written but not committed}
 >
 > **Key Findings:**
 > {If patterns were generated:}

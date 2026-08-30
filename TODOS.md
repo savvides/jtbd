@@ -3,28 +3,6 @@
 Open work, grouped by skill, then priority. P0 is most urgent. Completed items move
 to the bottom with the version that shipped them.
 
-## jtbd-pipeline
-
-### Unmatched glob aborts the whole `git add`, and the pipeline still reports success
-**Priority:** P0
-**Found:** v1.5.0.0 pre-landing review (pre-existing, predates v1.4.0.0)
-
-`jtbd-pipeline/SKILL.md:241` runs:
-
-```
-git add .jtbd/switches/*.yml .jtbd/patterns/*.yml .jtbd/manifest.yml .jtbd/.gitignore
-```
-
-With fewer than 3 transcripts, pattern analysis is skipped, so `.jtbd/patterns/` is
-never created. The unmatched glob takes down the entire command. Reproduced in both
-shells: bash gives `fatal: pathspec '.jtbd/patterns/*.yml' did not match any files`,
-exit 128, empty index; zsh fails before git runs at all. The commit then hits an
-empty index and the final summary still reports the pipeline complete.
-
-The user believes their interview evidence was committed. It is untracked.
-
-Fix: glob only what exists, or add paths individually and tolerate misses.
-
 ## jtbd-map / jtbd-brief
 
 ### The Job Map schema cannot fill the brief that consumes it
@@ -74,6 +52,17 @@ rules and a full YAML output contract that an LLM executes, and an edit to that 
 can degrade every analysis with nothing to catch it.
 
 ## Completed
+
+### /jtbd-pipeline staged nothing when pattern analysis was skipped
+**Priority:** was P0
+**Completed:** v1.5.0.1 (2026-08-30)
+
+`git add` used globs, and with fewer than 3 transcripts `.jtbd/patterns/` never
+exists, so the unmatched glob aborted the entire command. Reproduced in bash
+(`fatal: pathspec ... did not match`) and zsh (`no matches found`) — zero files
+staged either way, while the pipeline still reported success. Users were told their
+interview evidence was committed when it was untracked. Now stages directories, and
+reports honestly when nothing was staged.
 
 ### Every documented install path pointed at a repository that does not exist
 **Priority:** was P0
