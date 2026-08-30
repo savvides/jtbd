@@ -1,6 +1,5 @@
 ---
 name: jtbd-demo
-version: 1.0.0
 description: |
   Guided walkthrough of the JTBD skills. Takes a new user from "what is this?"
   to "I understand the four forces and know what to do next" in about 5 minutes.

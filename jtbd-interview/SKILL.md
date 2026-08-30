@@ -1,6 +1,5 @@
 ---
 name: jtbd-interview
-version: 1.0.0
 description: |
   Generate a customized Switch interview script based on your product context
   and existing evidence gaps. Outputs a ready-to-use markdown guide with

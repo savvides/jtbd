@@ -1,60 +1,27 @@
 #!/bin/bash
-# jtbd installer — installs JTBD skills for Claude Code
-# Usage: curl -sSL https://raw.githubusercontent.com/savvides/jtbd/main/install.sh | bash
+# jtbd installer
+#
+# Kept for people who land here from an old link. The supported install is the
+# Claude Code plugin marketplace, which is two commands inside Claude Code and
+# gives you versioned installs, updates and a clean uninstall:
+#
+#   /plugin marketplace add savvides/jtbd
+#   /plugin install jtbd@jtbd
+#
+# Cloning this repo into ~/.claude/skills/ does NOT register the skills. Claude
+# Code discovers personal skills at ~/.claude/skills/<skill-name>/SKILL.md, one
+# level deep, and a clone puts them two levels deep. That is what this script
+# used to do, and why it is no longer the install path.
 
-set -e
+cat <<'EOF'
+jtbd is installed as a Claude Code plugin.
 
-INSTALL_DIR="$HOME/.claude/skills/jtbd"
-REPO_URL="https://github.com/savvides/jtbd.git"
-# No releases are tagged yet, so install tracks main. Set JTBD_TAG to pin one.
-TAG="${JTBD_TAG:-}"
+Run these two commands inside Claude Code:
 
-echo "jtbd installer"
-echo "=============="
-echo ""
-echo "This will:"
-if [ -n "$TAG" ]; then
-  echo "  1. Clone $REPO_URL (tag: $TAG)"
-else
-  echo "  1. Clone $REPO_URL (latest from main)"
-fi
-echo "  2. Install to $INSTALL_DIR"
-echo ""
+  /plugin marketplace add savvides/jtbd
+  /plugin install jtbd@jtbd
 
-# Check prerequisites
-if ! command -v git >/dev/null 2>&1; then
-  echo "ERROR: git is required but not installed."
-  exit 1
-fi
+Then restart Claude Code, or run /reload-plugins, and /jtbd-demo will be available.
 
-# Check if already installed
-if [ -d "$INSTALL_DIR" ]; then
-  echo "jtbd is already installed at $INSTALL_DIR"
-  echo ""
-  echo "To update:"
-  echo "  cd $INSTALL_DIR && git pull"
-  echo ""
-  echo "To reinstall:"
-  echo "  rm -rf $INSTALL_DIR && bash install.sh"
-  exit 0
-fi
-
-# Create parent directory
-mkdir -p "$(dirname "$INSTALL_DIR")"
-
-# Clone
-echo "Cloning jtbd..."
-if [ -n "$TAG" ]; then
-  git clone --branch "$TAG" --depth 1 "$REPO_URL" "$INSTALL_DIR" 2>/dev/null || {
-    echo "  tag $TAG not found, installing latest from main"
-    git clone --depth 1 "$REPO_URL" "$INSTALL_DIR"
-  }
-else
-  git clone --depth 1 "$REPO_URL" "$INSTALL_DIR"
-fi
-
-echo ""
-echo "Installed to $INSTALL_DIR"
-echo ""
-echo "Try it: run /jtbd-switch in Claude Code"
-echo "Docs:   $INSTALL_DIR/docs/methodology.md"
+Docs: https://github.com/savvides/jtbd
+EOF

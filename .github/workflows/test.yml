@@ -9,7 +9,10 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  # The job id becomes the status check context GitHub reports. The "Protect Main
+  # Branch" ruleset requires a check named `run-lint`, so the id has to match it or
+  # the required check never reports and every PR to main is permanently unmergeable.
+  run-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,3 +25,15 @@ jobs:
         run: python3 scripts/validate.py --self-test
       - name: Validate skill definitions and example data
         run: python3 scripts/validate.py
+
+      # The manifests are how every installed user reaches these skills. validate.py
+      # mirrors the path check so contributors catch it locally, but this is the
+      # authoritative one: it is maintained against the real plugin loader.
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@2.1.251
+      - name: Validate the marketplace manifest
+        run: claude plugin validate .claude-plugin/marketplace.json --strict
+      - name: Validate the plugin manifest
+        # Not --strict: the repo's own CLAUDE.md sits at what is also the plugin root,
+        # which --strict reports as a warning. That is a repo layout fact, not a defect.
+        run: claude plugin validate .claude-plugin/plugin.json

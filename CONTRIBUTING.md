@@ -12,18 +12,28 @@ jtbd-yourskill/
 
 .claude/commands/
 └── jtbd-yourskill.md
+
+.claude-plugin/plugin.json      <- add "./jtbd-yourskill" to the "skills" array
 ```
 
 The `SKILL.md` needs:
 
-1. **YAML frontmatter** with `name`, `version`, `description`, and `allowed-tools`
+1. **YAML frontmatter** with `name`, `description`, and `allowed-tools`. Do not add
+   `version` — it is not a Claude Code frontmatter field, and the plugin manifest is
+   the single source of truth for the collection's version.
 2. **A preamble bash block** that detects `.jtbd/` and gstack
 3. **Clear instructions** for Claude on what to extract/generate
 4. **An example output** showing the exact expected format
 5. **A human review step** using AskUserQuestion before writing files
 
-You also need `.claude/commands/<your-skill>.md`, a one-line wrapper pointing at your
-`SKILL.md`. A skill without a paired wrapper has no slash command, and CI fails.
+You also need two more things, and CI fails without either:
+
+- `.claude/commands/<your-skill>.md`, a one-line wrapper pointing at your `SKILL.md`,
+  anchored with `${CLAUDE_PROJECT_DIR}`. This is what makes the command work while you
+  are developing inside this repo.
+- An entry in the `skills` array of `.claude-plugin/plugin.json`. This is what makes the
+  command exist for everyone who installed the plugin. Forgetting it is silent: the skill
+  is on disk, CI would be green without this check, and no installed user ever sees it.
 
 Before opening a PR, run `python3 scripts/validate.py`. See TESTING.md for what it
 checks.

@@ -1,6 +1,5 @@
 ---
 name: jtbd-map
-version: 1.0.0
 description: |
   Synthesizes patterns into a structured Job Map (YAML + Markdown).
   Accepts a patterns file (.jtbd/patterns/*.yml).

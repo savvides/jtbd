@@ -1,6 +1,5 @@
 ---
 name: jtbd-patterns
-version: 1.0.0
 description: |
   Find cross-interview patterns across 3+ switch analyses in .jtbd/switches/.
   Clusters recurring jobs, identifies force patterns, surfaces evidence gaps,

@@ -16,6 +16,13 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 ## Architecture
 
 - Skills are SKILL.md files in their own directories (`jtbd-switch/`, `jtbd-interview/`, etc.)
+- The repo is itself a Claude Code plugin. `.claude-plugin/marketplace.json` and
+  `.claude-plugin/plugin.json` sit at the root, and `plugin.json`'s `skills` array lists
+  every skill directory. That array is how installed users reach these skills: a path that
+  does not resolve drops one command with no error.
+- `.claude/commands/*.md` wrappers exist only for working inside this repo. They must be
+  anchored with `${CLAUDE_PROJECT_DIR}` — a bare relative path resolves only when the
+  shell's cwd happens to be the repo root, and Claude Code moves that cwd.
 - User data lives in `.jtbd/` in the user's repo (not this repo)
 - The skills need no external dependencies, no build step, no compiled binaries. `scripts/validate.py` needs PyYAML.
 - Optional gstack integration detected at runtime via path check
@@ -42,12 +49,18 @@ Key routing rules:
 ## Testing
 
 Run: `python3 scripts/validate.py` (validates skill frontmatter, command wrappers,
-YAML example data, and availability claims). CI runs `--self-test` and then the
-validator, on every push to `main` and every pull request. See TESTING.md for what
-each check covers and why.
+the plugin manifest, YAML example data, and availability claims). CI runs `--self-test`,
+then the validator, then `claude plugin validate` against both manifests, on every push
+to `main` and every pull request. See TESTING.md for what each check covers and why.
 
 Expectations:
-- When you add a skill, add `.claude/commands/<name>.md` in the same change. The wrapper must reference the skill its filename names — the validator checks pairing, not just presence.
+- When you add a skill, add `.claude/commands/<name>.md` AND a `./<name>` entry in
+  `.claude-plugin/plugin.json` in the same change. The wrapper must reference the skill its
+  filename names — the validator checks pairing, not just presence — and a skill missing
+  from the manifest is invisible to every installed user.
+- Skill frontmatter carries `name`, `description` and `allowed-tools`. Do not add `version`:
+  it is not a Claude Code field, not one of the six Agent Skills spec fields, and it blocks
+  claude.ai packaging. The plugin manifest holds the collection's version.
 - When you add a new file type under `.jtbd/`, add an example to `demo/.jtbd/` and make sure it parses.
 - When you add a check to `scripts/validate.py`, prove it fails on the bug it targets before committing.
 - Never commit a change that makes the validator fail.
