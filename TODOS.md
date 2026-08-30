@@ -39,7 +39,10 @@ Start at `jtbd-switch/SKILL.md` lines 19-50, which is the reference preamble.
 v1.6.0.1 added a `${CLAUDE_PLUGIN_ROOT}` probe to `jtbd-demo` and `jtbd-pipeline`, the
 only two preambles that resolve a skills root. That is the fix in two places, not the
 extraction — it is exactly the duplication this item exists to remove, and the next
-skill that needs an asset path will copy it a third time.
+skill that needs an asset path will copy it a third time. `check_plugin_root_probe` and
+`check_bash_declared` in `validate.py` now keep a third copy from being *wrong*, which
+lowers the urgency but does not close this: they enforce that a probe exists, not that
+the eight preambles stay in step.
 
 ### The plugin install path has never been verified end to end
 **Priority:** P0

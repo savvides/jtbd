@@ -65,6 +65,13 @@ Expectations:
 - Skill frontmatter carries `name`, `description` and `allowed-tools`. Do not add `version`:
   it is not a Claude Code field, not one of the six Agent Skills spec fields, and it blocks
   claude.ai packaging. The plugin manifest holds the collection's version.
+- A skill with a ```bash block must list `Bash` in `allowed-tools`. `/jtbd-demo` did not,
+  from v1.0.0 to v1.6.0.1, so its whole preamble silently never ran.
+- A skill that resolves the skills root to reach a bundled file (`examples/`, `demo/`,
+  another skill's `SKILL.md`) must probe `${CLAUDE_PLUGIN_ROOT}` first, then the repo,
+  then a legacy clone last — and must anchor every path it reads *and every path it tells
+  the user to type* to that root. Plugin installs live under `~/.claude/plugins/`, and a
+  bare relative path resolves to the user's own project, where nothing is.
 - When you add a new file type under `.jtbd/`, add an example to `demo/.jtbd/` and make sure it parses.
 - When you add a check to `scripts/validate.py`, prove it fails on the bug it targets before committing.
 - Never commit a change that makes the validator fail.

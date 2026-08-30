@@ -101,6 +101,15 @@ manifest is validated with `--strict`; the plugin manifest is not, because `--st
 reports this repo's own `CLAUDE.md` at the plugin root as a warning, and that is a
 repo layout fact rather than a defect.
 
+**Skill runtime contracts** (`*/SKILL.md`)
+- A skill containing a ```bash block declares `Bash` in `allowed-tools`. Without it the
+  block never runs and nothing says so: `/jtbd-demo` shipped that way from v1.0.0 to
+  v1.6.0.1, its skills-root resolution dead code the whole time.
+- A skill that assigns `_JTBD_SKILLS` probes `${CLAUDE_PLUGIN_ROOT}`. A resolver that
+  checks only the repo root and `~/.claude/skills/jtbd` finds nothing under a plugin
+  install, which is where every installed user actually is. That is the v1.6.0.0
+  regression, and this is what stops it recurring.
+
 **Availability claims** (every `.md`)
 - Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has
   no escapes: the three below belong to the "coming soon" check alone.
@@ -133,7 +142,10 @@ unparseable YAML, an incomplete switch analysis, a switch analysis missing
 `interviewee`, an unadvertised skill, and six ways the plugin manifest can silently
 drop a command: absent, malformed JSON, no `skills` list, an entry that is not
 `./`-relative, an entry that resolves to no `SKILL.md`, and a skill on disk the list
-omits. Disabling any of those check bodies fails the self-test.
+omits. Two more pin the runtime contracts: a bash block in a skill that does not declare
+`Bash`, and a `_JTBD_SKILLS` resolver that never probes `${CLAUDE_PLUGIN_ROOT}` (with a
+positive case proving a resolver that does probe is accepted). Disabling any of those
+check bodies fails the self-test.
 
 Separately, and not via a fixture, `self_test()` asserts the `WRAPPER_LINE1` regex
 directly against the wrapper line 1 forms it must reject: blank, a comment, a heading,

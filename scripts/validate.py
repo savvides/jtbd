@@ -344,8 +344,67 @@ def check_plugin_manifest(files, skill_dirs):
     return read
 
 
+def check_bash_declared(files, skill_dirs):
+    """A skill that runs a bash block declares Bash, or the block silently never runs.
+
+    jtbd-demo shipped a preamble it had no permission to execute from v1.0.0 through
+    v1.6.0.1: the whole skills-root resolution lived in a ```bash block while
+    allowed-tools listed only Read, Glob and AskUserQuestion. Nothing failed loudly.
+    """
+    read = set()
+    for rel in skill_paths(files):
+        text = read_text(rel)
+        if text is None:
+            continue
+        read.add(rel)
+        if "```bash" not in text:
+            continue
+
+        block, error = parse_frontmatter(text)
+        if error is not None:
+            continue  # check_skills already reported it
+        try:
+            meta = yaml.safe_load(block)
+        except yaml.YAMLError:
+            continue
+        if not isinstance(meta, dict):
+            continue
+
+        tools = meta.get("allowed-tools") or []
+        if isinstance(tools, str):
+            tools = [tools]
+        if "Bash" not in tools:
+            fail(rel, "has a ```bash block but does not list 'Bash' in allowed-tools, "
+                      "so the block never runs")
+    return read
+
+
+def check_plugin_root_probe(files, skill_dirs):
+    """A skill that resolves a skills root probes ${CLAUDE_PLUGIN_ROOT} to find it.
+
+    Plugin installs land under ~/.claude/plugins/, which is neither the repo root nor
+    the pre-v1.6.0.0 ~/.claude/skills/jtbd clone. A resolver that checks only those two
+    returns nothing for every installed user, and the skill dead-ends with no error.
+    That is the v1.6.0.0 regression; this keeps it from coming back.
+    """
+    read = set()
+    for rel in skill_paths(files):
+        text = read_text(rel)
+        if text is None:
+            continue
+        read.add(rel)
+        # An assignment, not a mention: the resolver is what has to probe.
+        if "_JTBD_SKILLS=" not in text:
+            continue
+        if "CLAUDE_PLUGIN_ROOT" not in text:
+            fail(rel, "resolves a skills root but never probes ${CLAUDE_PLUGIN_ROOT}, "
+                      "so it finds nothing under a plugin install")
+    return read
+
+
 CHECKS = (check_skills, check_commands, check_yaml, check_availability,
-          check_docs_list_skills, check_plugin_manifest)
+          check_docs_list_skills, check_plugin_manifest, check_bash_declared,
+          check_plugin_root_probe)
 
 
 def run_checks(files):
@@ -476,6 +535,21 @@ def self_test():
             "missing trailing newline", "missing trailing newline not caught")
     rejects({**_base_fixture(), "CLAUDE.md": "nothing here\n"},
             "never lists it", "unadvertised skill not caught")
+
+    # A bash block the skill has no permission to run, and a skills-root resolver that
+    # cannot see a plugin install. Both shipped; both were silent.
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": "---\nname: alpha\ndescription: d\nallowed-tools:\n"
+                               "  - Read\n---\n\n```bash\necho hi\n```\n"},
+            "does not list 'Bash'", "undeclared bash block not caught")
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": SKILL.format(name="alpha")
+                               + '\n```bash\n_JTBD_SKILLS="$HOME/.claude/skills/jtbd"\n```\n'},
+            "never probes", "resolver without a plugin-root probe not caught")
+    require(_run_fixture({**_base_fixture(),
+                          "alpha/SKILL.md": SKILL.format(name="alpha")
+                          + '\n```bash\n_JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"\n```\n'}) == [],
+            "a resolver that does probe CLAUDE_PLUGIN_ROOT was rejected")
 
     require(_run_fixture({**_base_fixture(),
                           "CHANGELOG.md": "- `/alpha` is no longer marked coming soon.\n"}) == [],

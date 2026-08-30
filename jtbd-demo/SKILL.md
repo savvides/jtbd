@@ -6,6 +6,7 @@ description: |
   Uses existing example data, no real interview required.
   Use when: "demo", "tutorial", "how does this work", "show me", "getting started".
 allowed-tools:
+  - Bash
   - Read
   - Glob
   - AskUserQuestion
@@ -86,7 +87,7 @@ Present these excerpts to the user:
 Use AskUserQuestion: "Ready to see the four forces?"
 Options: A) Show me  B) Can I read the full transcript first?
 
-If B: Tell the user the transcript is at `examples/sample-transcript.txt` — they can read it with `/read examples/sample-transcript.txt`. Then continue to Step 3.
+If B: Tell the user the transcript is at `$_JTBD_SKILLS/examples/sample-transcript.txt`, substituting the actual value the preamble echoed for `JTBD_SKILLS` so they get a real absolute path they can copy. Then continue to Step 3.
 
 ### Step 3: The Four Forces
 
@@ -187,10 +188,14 @@ Options: A) Let's do it  B) I'll come back later
 
 **If A (Let's do it):**
 
+In every command below, replace `<JTBD_SKILLS>` with the actual path the preamble
+echoed for `JTBD_SKILLS`. The user is in their own project, not this repo, so a bare
+`examples/...` path does not resolve for them.
+
 > Run this in Claude Code:
 >
 > ```
-> /jtbd-switch examples/sample-transcript.txt
+> /jtbd-switch <JTBD_SKILLS>/examples/sample-transcript.txt
 > ```
 >
 > That will analyze the same Sarah transcript you just saw, and create a `.jtbd/switches/` file in your repo. You'll get to review the output before it's committed.
@@ -209,11 +214,13 @@ Options: A) Let's do it  B) I'll come back later
 
 **If B (Come back later):**
 
+Same substitution rule: replace `<JTBD_SKILLS>` with the path the preamble echoed.
+
 > No rush. When you're ready:
 >
-> - Run `/jtbd-switch examples/sample-transcript.txt` to try it with sample data
+> - Run `/jtbd-switch <JTBD_SKILLS>/examples/sample-transcript.txt` to try it with sample data
 > - Run `/jtbd-switch` with no arguments to paste your own interview transcript
-> - Read `docs/methodology.md` for the full methodology guide
-> - Browse `demo/.jtbd/` to see what a complete research project looks like
+> - Read `<JTBD_SKILLS>/docs/methodology.md` for the full methodology guide
+> - Browse `<JTBD_SKILLS>/demo/.jtbd/` to see what a complete research project looks like
 >
 > The best way to learn JTBD is to do one real interview. Everything clicks after that.

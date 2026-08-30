@@ -57,15 +57,17 @@ else
   echo "SWITCH_COUNT: 0"
 fi
 
-# Detect jtbd skill locations. ${CLAUDE_PLUGIN_ROOT} comes first: plugin installs land
-# under ~/.claude/plugins/, which matches neither branch below.
+# Detect jtbd skill locations. Order matches jtbd-demo: plugin root, then the repo you
+# are working in, then a pre-v1.6.0.0 clone last. Every branch tests for an actual
+# SKILL.md, not just a directory — a leftover empty ~/.claude/skills/jtbd must not
+# outrank a working tree that really has the skills.
 _JTBD_SKILLS=""
 if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/jtbd-switch/SKILL.md" ]; then
   _JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"
-elif [ -d "$HOME/.claude/skills/jtbd" ]; then
-  _JTBD_SKILLS="$HOME/.claude/skills/jtbd"
 elif [ -n "$_ROOT" ] && [ -f "$_ROOT/jtbd-switch/SKILL.md" ]; then
   _JTBD_SKILLS="$_ROOT"
+elif [ -f "$HOME/.claude/skills/jtbd/jtbd-switch/SKILL.md" ]; then
+  _JTBD_SKILLS="$HOME/.claude/skills/jtbd"
 fi
 echo "JTBD_SKILLS: ${_JTBD_SKILLS:-not found}"
 ```
@@ -160,7 +162,7 @@ For each transcript, run the `/jtbd-switch` analysis. This is the core loop.
 
 **If 3 or fewer transcripts:** Run sequentially. For each transcript:
 1. Read the transcript file
-2. Follow the `/jtbd-switch` extraction rules (from `jtbd-switch/SKILL.md`):
+2. Follow the `/jtbd-switch` extraction rules (read them from `$_JTBD_SKILLS/jtbd-switch/SKILL.md`, substituting the path the preamble echoed for `JTBD_SKILLS`; a bare `jtbd-switch/SKILL.md` does not resolve from the user's own project):
    - Extract the switching timeline (first thought, passive looking, active looking, deciding, consuming)
    - Extract the four forces (push, pull, anxiety, habit) with verbatim quotes and intensity scores
    - Generate a job story in Klement format
@@ -173,7 +175,7 @@ For each transcript, run the `/jtbd-switch` analysis. This is the core loop.
 
 Each agent prompt should include:
 - The full transcript content
-- The extraction rules from the "Extract Switch Analysis" section of `jtbd-switch/SKILL.md` (methodology, extraction rules, output format, filename convention)
+- The extraction rules from the "Extract Switch Analysis" section of `$_JTBD_SKILLS/jtbd-switch/SKILL.md` (methodology, extraction rules, output format, filename convention). Read that file yourself and paste the rules into the agent prompt — the agent gets no `JTBD_SKILLS` value of its own, so a bare or unsubstituted path leaves it improvising the methodology from memory.
 - The `.jtbd/switches/` output path
 - Instructions to write the YAML file and report the result
 

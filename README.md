@@ -42,7 +42,7 @@ Or analyze the example transcript that ships with the plugin:
 /jtbd-switch
 ```
 
-and paste in `examples/sample-transcript.txt`, or any interview text of your own.
+and paste in any interview text of your own. To use the bundled sample instead, run `/jtbd-demo` first — it prints the absolute path the plugin installed to, and every command it suggests is already anchored to it. The sample lives at `examples/sample-transcript.txt` *inside the plugin directory*, not in your project, so a bare relative path will not find it.
 
 ### What you get
 
@@ -57,7 +57,7 @@ your-repo/
 └── ...
 ```
 
-Check out `demo/.jtbd/` to see a fully populated project with three interviews and pattern analysis.
+The plugin also ships `demo/.jtbd/`, a fully populated project with three interviews and pattern analysis. `/jtbd-demo` walks you through it and tells you where it landed on disk; you can also [browse it on GitHub](https://github.com/savvides/jtbd/tree/main/demo/.jtbd).
 
 ## Available skills
 
@@ -125,7 +125,7 @@ Check the name is exactly `savvides/jtbd`. The marketplace is served from this r
 That does not register the skills. Claude Code discovers personal skills at `~/.claude/skills/<skill-name>/SKILL.md`, one level deep, and a clone of this repo puts them two levels deep. Use the plugin install above.
 
 **A generated YAML file will not parse.**
-`/jtbd-switch` and `/jtbd-patterns` check their own output before saving. The other skills do not yet. Run `python3 scripts/validate.py` from this repo against your data, or open an issue with the file.
+`/jtbd-switch` and `/jtbd-patterns` check their own output before saving. The other skills do not yet. `scripts/validate.py` validates *this repository*, not your `.jtbd/` data, so it is not the tool for this — check the file with `python3 -c "import yaml,sys; yaml.safe_load(open(sys.argv[1]))" .jtbd/switches/your-file.yml`, or open an issue with the file attached.
 
 ## Learn JTBD
 
