@@ -1,18 +1,23 @@
 #!/bin/bash
 # jtbd installer — installs JTBD skills for Claude Code
-# Usage: curl -sSL https://raw.githubusercontent.com/philippossavvides/jtbd/main/install.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/savvides/jtbd/main/install.sh | bash
 
 set -e
 
 INSTALL_DIR="$HOME/.claude/skills/jtbd"
-REPO_URL="https://github.com/philippossavvides/jtbd.git"
-TAG="v1.1.0"
+REPO_URL="https://github.com/savvides/jtbd.git"
+# No releases are tagged yet, so install tracks main. Set JTBD_TAG to pin one.
+TAG="${JTBD_TAG:-}"
 
 echo "jtbd installer"
 echo "=============="
 echo ""
 echo "This will:"
-echo "  1. Clone $REPO_URL (tag: $TAG)"
+if [ -n "$TAG" ]; then
+  echo "  1. Clone $REPO_URL (tag: $TAG)"
+else
+  echo "  1. Clone $REPO_URL (latest from main)"
+fi
 echo "  2. Install to $INSTALL_DIR"
 echo ""
 
@@ -39,8 +44,14 @@ mkdir -p "$(dirname "$INSTALL_DIR")"
 
 # Clone
 echo "Cloning jtbd..."
-git clone --branch "$TAG" --depth 1 "$REPO_URL" "$INSTALL_DIR" 2>/dev/null || \
+if [ -n "$TAG" ]; then
+  git clone --branch "$TAG" --depth 1 "$REPO_URL" "$INSTALL_DIR" 2>/dev/null || {
+    echo "  tag $TAG not found, installing latest from main"
+    git clone --depth 1 "$REPO_URL" "$INSTALL_DIR"
+  }
+else
   git clone --depth 1 "$REPO_URL" "$INSTALL_DIR"
+fi
 
 echo ""
 echo "Installed to $INSTALL_DIR"

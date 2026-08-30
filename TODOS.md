@@ -73,14 +73,23 @@ skill's runtime output is any good. `/jtbd-switch` alone carries five extraction
 rules and a full YAML output contract that an LLM executes, and an edit to that prose
 can degrade every analysis with nothing to catch it.
 
-### install.sh pins a tag three releases behind
-**Priority:** P3
-**Found:** v1.5.0.0 pre-landing review (pre-existing)
-
-`install.sh:9` reads `TAG="v1.1.0"` while VERSION is now 1.5.0.0. v1.1.0 predates
-`/jtbd-pipeline` and all three of the newest skills. Line 15 prints that version to
-the user during install.
-
 ## Completed
 
-_Nothing yet._
+### Every documented install path pointed at a repository that does not exist
+**Priority:** was P0
+**Completed:** v1.5.0.0 (2026-08-29)
+
+`README.md`, `install.sh` and `jtbd-demo/SKILL.md` pointed at
+`github.com/philippossavvides/jtbd`, which returns "Repository not found", so every
+install command a user copied failed. Repointed to `github.com/savvides/jtbd`, which
+is the repo's actual origin and is public. Verified by running the installer against
+a sandboxed HOME: it clones and lands all eight skills.
+
+### install.sh claimed a version it was not installing
+**Priority:** was P3
+**Completed:** v1.5.0.0 (2026-08-29)
+
+`install.sh` pinned `TAG="v1.1.0"` and printed it, but origin has no tags at all, so
+the clone always fell through to the default branch while telling the user it had
+installed v1.1.0. The pin is now opt-in via `JTBD_TAG`, the banner states what will
+actually be installed, and the fallback announces itself.

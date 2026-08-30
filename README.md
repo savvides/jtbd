@@ -18,13 +18,13 @@ This output gets saved to a `.jtbd/` directory so you can commit it alongside yo
 ### Install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/philippossavvides/jtbd/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/savvides/jtbd/main/install.sh | bash
 ```
 
 Or manually clone it:
 
 ```bash
-git clone https://github.com/philippossavvides/jtbd.git ~/.claude/skills/jtbd
+git clone https://github.com/savvides/jtbd.git ~/.claude/skills/jtbd
 ```
 
 ### Try it

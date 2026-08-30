@@ -31,7 +31,7 @@ _DEMO_OK="yes"
 echo "DEMO_ASSETS: $_DEMO_OK"
 ```
 
-If `DEMO_ASSETS` is `no`: tell the user "Demo files not found. Make sure jtbd is installed correctly. Try: `git clone https://github.com/philippossavvides/jtbd.git ~/.claude/skills/jtbd`" and stop.
+If `DEMO_ASSETS` is `no`: tell the user "Demo files not found. Make sure jtbd is installed correctly. Try: `git clone https://github.com/savvides/jtbd.git ~/.claude/skills/jtbd`" and stop.
 
 ## The Demo
 
