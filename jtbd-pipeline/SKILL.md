@@ -253,8 +253,12 @@ git diff --cached --quiet && echo "STAGED: none" || echo "STAGED: $(git diff --c
 2. If `GIT` is `yes` and the manifest has `auto_commit: true`, and `STAGED` is not
 `none`:
 
+Substitute the real transcript count for `<N>` before running this. It sits in a bash
+block, so it gets copied verbatim unless you replace it — a commit reading
+`pipeline analysis of {N} interviews` has shipped to this repo's own history once.
+
 ```bash
-git commit -m "jtbd: pipeline analysis of {N} interviews"
+git commit -m "jtbd: pipeline analysis of <N> interviews"
 ```
 
 If `STAGED` is `none`, do not commit and do not report the run as committed. Tell the
