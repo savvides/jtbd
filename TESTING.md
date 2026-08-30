@@ -109,6 +109,13 @@ repo layout fact rather than a defect.
   checks only the repo root and `~/.claude/skills/jtbd` finds nothing under a plugin
   install, which is where every installed user actually is. That is the v1.6.0.0
   regression, and this is what stops it recurring.
+- No `git` line inside a ```bash block carries a `{...}` placeholder. Prose in these
+  skills uses `{N}` and `{filename}` as fill-me-in markers, so the same braces on a
+  runnable line get copied through literally. Commit `e001a78` in this repo reads
+  `jtbd: pipeline analysis of {N} interviews`, and an unsubstituted
+  `git add .jtbd/switches/{filename}.yml` fails its pathspec and stages nothing, which
+  is the v1.5.0.1 bug all over again. Runnable lines use `<...>` plus a sentence telling
+  the reader to substitute. Braces in prose, or in a non-bash block, are untouched.
 
 **Availability claims** (every `.md`)
 - Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has

@@ -289,9 +289,13 @@ If `evidence_strength.overall` < 5, add this warning to the AskUserQuestion:
 
 2. If `GIT` is `yes` and the manifest has `auto_commit: true`:
 
+Substitute the real filename, name and role for `<filename>`, `<Name>` and `<Role>`
+before running this. They sit in a bash block and are copied verbatim unless you replace
+them: an unsubstituted `git add` fails the pathspec and stages nothing.
+
 ```bash
-git add .jtbd/switches/{filename}.yml
-git commit -m "jtbd: add switch analysis for {Name} ({Role})"
+git add .jtbd/switches/<filename>.yml
+git commit -m "jtbd: add switch analysis for <Name> (<Role>)"
 ```
 
 If the commit fails (dirty tree, hooks, etc.), write the file but skip the commit. Tell the user: "File written to .jtbd/switches/{filename}.yml but not committed. Run `git add` and `git commit` manually."

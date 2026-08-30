@@ -402,9 +402,41 @@ def check_plugin_root_probe(files, skill_dirs):
     return read
 
 
+def check_git_placeholders(files, skill_dirs):
+    """No `{...}` placeholder survives inside a git command in a bash block.
+
+    Prose in these skills uses `{N}`, `{filename}` and friends as fill-me-in markers, so
+    the same braces inside a runnable line read as literal text and get copied through.
+    Commit e001a78 in this repo's own history is `jtbd: pipeline analysis of {N}
+    interviews`, and an unsubstituted `git add .jtbd/x/{filename}.yml` fails its pathspec
+    and stages nothing — the v1.5.0.1 bug class. Use `<...>` in runnable lines instead,
+    with a sentence telling the reader to substitute.
+    """
+    read = set()
+    for rel in skill_paths(files):
+        text = read_text(rel)
+        if text is None:
+            continue
+        read.add(rel)
+        in_bash = False
+        for number, line in enumerate(text.splitlines(), 1):
+            if line.startswith("```"):
+                in_bash = line.startswith("```bash")
+                continue
+            if not in_bash:
+                continue
+            stripped = line.strip()
+            if not stripped.startswith("git "):
+                continue
+            if "{" in stripped or "}" in stripped:
+                fail(rel, f"line {number}: git command carries a {{...}} placeholder that "
+                          f"gets run literally; use <...> and say to substitute it")
+    return read
+
+
 CHECKS = (check_skills, check_commands, check_yaml, check_availability,
           check_docs_list_skills, check_plugin_manifest, check_bash_declared,
-          check_plugin_root_probe)
+          check_plugin_root_probe, check_git_placeholders)
 
 
 def run_checks(files):
@@ -550,6 +582,20 @@ def self_test():
                           "alpha/SKILL.md": SKILL.format(name="alpha")
                           + '\n```bash\n_JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"\n```\n'}) == [],
             "a resolver that does probe CLAUDE_PLUGIN_ROOT was rejected")
+
+    # A placeholder that runs literally: commit e001a78 shipped one to this repo.
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": SKILL.format(name="alpha")
+                               + '\n```bash\ngit commit -m "x {N} y"\n```\n'},
+            "placeholder that", "literal {...} in a git command not caught")
+    require(_run_fixture({**_base_fixture(),
+                          "alpha/SKILL.md": SKILL.format(name="alpha")
+                          + '\n```bash\ngit commit -m "x <N> y"\n```\n'}) == [],
+            "the <...> placeholder convention was rejected")
+    require(_run_fixture({**_base_fixture(),
+                          "alpha/SKILL.md": SKILL.format(name="alpha")
+                          + '\nprose may say {N} freely\n\n```python\nd = {"k": 1}\n```\n'}) == [],
+            "braces outside a bash git line were rejected")
 
     require(_run_fixture({**_base_fixture(),
                           "CHANGELOG.md": "- `/alpha` is no longer marked coming soon.\n"}) == [],

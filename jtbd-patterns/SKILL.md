@@ -276,9 +276,14 @@ If the user chooses B, make the requested changes and re-present.
 
 3. If `GIT` is `yes` and the manifest has `auto_commit: true`:
 
+Substitute the real filename and count for `<filename>` and `<N>` before running this.
+These sit in a bash block, so they are copied verbatim unless you replace them: an
+unsubstituted `git add` fails the pathspec and stages nothing, and an unsubstituted
+commit message ships a literal placeholder into git history. Both have happened.
+
 ```bash
-git add .jtbd/patterns/{filename}.yml
-git commit -m "jtbd: add pattern analysis across {N} interviews"
+git add .jtbd/patterns/<filename>.yml
+git commit -m "jtbd: add pattern analysis across <N> interviews"
 ```
 
 If the commit fails, write the file but skip the commit. Tell the user: "File written to .jtbd/patterns/{filename}.yml but not committed."
