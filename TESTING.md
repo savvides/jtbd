@@ -60,8 +60,12 @@ single path segment, so a nested `SKILL.md` could never satisfy the pairing chec
   (`interviewee`, `timeline`, `forces`, `job_story`, `evidence_strength`), patterns
   files (`schema_version`, `clusters`, `force_patterns`), job maps (`job`, `steps`),
   and `manifest.yml` (`schema_version`, `product`, `target_user`, `settings`).
-  Shape is read from the document's own content where it can be, so a non-switch
-  file living under `switches/` is not forced into the wrong contract.
+  Shape is resolved in a fixed order, and the path counts as much as the content:
+  an `interviewee` key marks a switch wherever the file sits, and so does living
+  under `switches/` — a patterns or job-map file placed there is still held to the
+  switch contract. Then `manifest.yml` by name, then `patterns/` or a `clusters`
+  key, then `jobs/` or a `steps` key. A file none of those place is parsed but not
+  shape-checked.
 - Parse errors report type and position only, never the offending source line.
   These files hold interviewee names and verbatim quotes, and CI logs outlive the
   file they came from.
