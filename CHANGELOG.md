@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`. The repository is its own plugin marketplace, so installs are versioned and `/plugin update` and uninstall work.
 - `validate.py` checks the plugin manifest: that it exists, is valid JSON, that `skills` is a list of `./`-relative paths, that every entry resolves to a real `SKILL.md`, and that no skill on disk is missing from the list. Each way the manifest can silently drop a command has its own self-test fixture; disabling the check body fails all six.
+- The CI job is renamed `validate` -> `run-lint`, because the "Protect Main Branch" ruleset requires a status check named `run-lint` and no workflow produced one. The required check could never report, so every pull request to `main` was permanently unmergeable through the normal path. The job id is what GitHub uses as the check context, so it has to match the rule.
 - CI runs `claude plugin validate` against both manifests. That is the authoritative check, maintained against the real plugin loader; the validator's own checks mirror the path resolution so contributors without the CLI catch the common mistake locally.
 - README sections for what jtbd is *not*, what it costs to run (including that `/jtbd-pipeline` fans out to 4 concurrent agents), and troubleshooting a plugin install that registers no commands.
 

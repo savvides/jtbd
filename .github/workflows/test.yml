@@ -9,7 +9,10 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  # The job id becomes the status check context GitHub reports. The "Protect Main
+  # Branch" ruleset requires a check named `run-lint`, so the id has to match it or
+  # the required check never reports and every PR to main is permanently unmergeable.
+  run-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
