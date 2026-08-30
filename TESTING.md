@@ -71,9 +71,10 @@ single path segment, so a nested `SKILL.md` could never satisfy the pairing chec
   file they came from.
 
 **Availability claims** (every `.md`)
+- Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has
+  no escapes: the three below belong to the "coming soon" check alone.
 - No skill that ships in this repo is advertised as "coming soon", in prose or in a
   README table cell.
-- Every shipped skill is listed in both `README.md` and `CLAUDE.md`.
 
   Three escapes exist, because truthful prose can name a skill and "coming soon" on
   one line. `CHANGELOG.md` and `docs/superpowers/` are exempt outright — they are

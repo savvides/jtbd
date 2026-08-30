@@ -43,8 +43,8 @@ PAST_TENSE = re.compile(r"no longer|previously|used to be|was marked|removed the
 SEGMENT = re.compile(r"[|.]")
 ALLOW_MARKER = "<!-- validate: allow-coming-soon -->"
 
-# Documented shapes. A document is classified by its own content where possible,
-# so a non-switch file living under switches/ is not forced into the wrong contract.
+# Documented shapes. The path classifies as strongly as the content: anything under
+# switches/ is held to the switch contract whatever keys it actually carries.
 SWITCH_KEYS = ("interviewee", "timeline", "forces", "job_story", "evidence_strength")
 PATTERNS_KEYS = ("schema_version", "clusters", "force_patterns")
 JOB_KEYS = ("job", "steps")
