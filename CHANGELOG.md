@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0.1] - 2026-08-30
+
+### Fixed
+- `/jtbd-pipeline` reported success without committing anything when it ran on fewer than 3 transcripts. Pattern analysis is skipped at that size, so `.jtbd/patterns/` never exists, and the unmatched glob in `git add` aborted the whole command — leaving every switch analysis untracked while the summary said the run was complete. It now stages directories instead of globs, and says so plainly when there is nothing to commit.
+
 ## [1.5.0.0] - 2026-08-29
 
 ### Added
