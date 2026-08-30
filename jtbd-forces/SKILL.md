@@ -1,6 +1,5 @@
 ---
 name: jtbd-forces
-version: 1.0.0
 description: |
   Generates an HTML diagram of the four forces driving a switch.
   Accepts either a single interview file (.jtbd/switches/*.yml) or an aggregate patterns file (.jtbd/patterns/*.yml).

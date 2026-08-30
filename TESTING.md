@@ -40,13 +40,18 @@ single path segment, so a nested `SKILL.md` could never satisfy the pairing chec
 - Frontmatter starts at byte 0, so the loader can actually read it
 - Frontmatter is closed by a `---` line of its own — a horizontal rule or a setext
   heading underline in the body cannot masquerade as the closing fence
-- Parses as YAML and declares `name`, `version`, `description`, `allowed-tools`
+- Parses as YAML and declares `name`, `description`, `allowed-tools`. `version` is
+  deliberately not required: it is not a Claude Code frontmatter field, not one of the
+  six Agent Skills spec fields, and carrying it blocks claude.ai packaging.
 - `name` matches the directory the skill lives in
 - File ends with a newline
 
 **Command wrappers** (`.claude/commands/*.md`)
 - Line 1 is the wrapper sentence, which is what the slash-command picker displays.
   A stray comment, a heading, or a leading blank line all fail.
+- Line 1 anchors the path with `${CLAUDE_PROJECT_DIR}`. The bare relative form that
+  shipped through v1.5.0.1 resolves only when the shell's cwd is the repo root, and
+  Claude Code moves that cwd, so it is now rejected outright.
 - Each wrapper references a `SKILL.md` that exists on disk
 - Each wrapper is *paired* with the skill its filename names. Coverage is not
   pairing: two wrappers with swapped targets would each run the wrong skill.
@@ -69,6 +74,27 @@ single path segment, so a nested `SKILL.md` could never satisfy the pairing chec
 - Parse errors report type and position only, never the offending source line.
   These files hold interviewee names and verbatim quotes, and CI logs outlive the
   file they came from.
+
+**Plugin manifest** (`.claude-plugin/plugin.json`)
+
+This is the only path an installed user has to these skills, and every way it breaks
+is silent — the command simply does not exist, with no error anywhere. So each way is
+its own check:
+- The manifest exists at all
+- It is valid JSON
+- `skills` is a list
+- Every entry is a relative path starting `./`
+- Every entry resolves to a directory containing a `SKILL.md`
+- Every skill directory on disk appears in the list. A skill the manifest omits ships
+  to nobody, which is the same outcome as not shipping it.
+
+CI additionally runs `claude plugin validate` against `.claude-plugin/plugin.json` and
+`.claude-plugin/marketplace.json`. That is the authoritative check, maintained against
+the real plugin loader; the checks above mirror the path resolution so contributors
+without the Claude Code CLI still catch the common mistake locally. The marketplace
+manifest is validated with `--strict`; the plugin manifest is not, because `--strict`
+reports this repo's own `CLAUDE.md` at the plugin root as a warning, and that is a
+repo layout fact rather than a defect.
 
 **Availability claims** (every `.md`)
 - Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has

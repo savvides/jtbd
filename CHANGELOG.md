@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0.0] - 2026-08-30
+
+### Fixed
+- **Every documented install path produced skills Claude Code could not see.** `install.sh` cloned this repo to `~/.claude/skills/jtbd/`, which puts every `SKILL.md` two levels below `~/.claude/skills/`. Claude Code discovers personal skills exactly one level deep, so the install landed eight files and registered nothing. Verified against a sandboxed `HOME`: all eight `SKILL.md` files present, none at a discovery path, and no `~/.claude/commands/` created. jtbd is now a Claude Code plugin — `/plugin marketplace add savvides/jtbd`, then `/plugin install jtbd@jtbd`.
+- **Command wrappers only worked from one directory.** All eight `.claude/commands/*.md` files pointed at a bare relative path (`jtbd-switch/SKILL.md`), which resolves only when the shell's cwd is this repo's root — exactly the case the README says is not the use case. They now anchor with `${CLAUDE_PROJECT_DIR}`, and the validator rejects the bare form outright.
+- `install.sh` no longer performs an install that cannot work. It prints the two plugin commands and explains why cloning into `~/.claude/skills/` does not register anything.
+
+### Added
+- `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`. The repository is its own plugin marketplace, so installs are versioned and `/plugin update` and uninstall work.
+- `validate.py` checks the plugin manifest: that it exists, is valid JSON, that `skills` is a list of `./`-relative paths, that every entry resolves to a real `SKILL.md`, and that no skill on disk is missing from the list. Each way the manifest can silently drop a command has its own self-test fixture; disabling the check body fails all six.
+- CI runs `claude plugin validate` against both manifests. That is the authoritative check, maintained against the real plugin loader; the validator's own checks mirror the path resolution so contributors without the CLI catch the common mistake locally.
+- README sections for what jtbd is *not*, what it costs to run (including that `/jtbd-pipeline` fans out to 4 concurrent agents), and troubleshooting a plugin install that registers no commands.
+
+### Changed
+- Skill frontmatter no longer carries `version`. It is not a Claude Code frontmatter field and not one of the six Agent Skills spec fields, so carrying it blocked claude.ai packaging — and all eight were stale at `1.0.0` against a `VERSION` of `1.5.0.1`. The plugin manifest is now the single source of truth for the collection's version.
+- `/jtbd-forces`, `/jtbd-map` and `/jtbd-brief` are marked **Preview** in the README rather than Available, with the reason stated: `/jtbd-map` emits a schema that does not carry every field `/jtbd-brief` requires, so on the default path part of a generated brief has no source in your data. Tracked in TODOS.md.
+
 ## [1.5.0.1] - 2026-08-30
 
 ### Fixed

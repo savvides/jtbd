@@ -1,6 +1,5 @@
 ---
 name: jtbd-brief
-version: 1.0.0
 description: |
   Drafts a JTBD-native product brief from Job Map data.
   Accepts a Job Map YAML file (.jtbd/jobs/*.yml).

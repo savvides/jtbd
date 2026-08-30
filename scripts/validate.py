@@ -16,6 +16,7 @@ explicitly rather than through `assert` (which -O strips). A validator that can
 pass without checking is worse than no validator.
 """
 
+import json
 import re
 import subprocess
 import sys
@@ -29,19 +30,29 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 
-REQUIRED_FRONTMATTER = ("name", "version", "description", "allowed-tools")
+# `version` is deliberately absent: it is not a Claude Code frontmatter field and not
+# one of the six Agent Skills spec fields, so carrying it blocks claude.ai packaging.
+# The plugin manifest is the single source of truth for the collection's version.
+REQUIRED_FRONTMATTER = ("name", "description", "allowed-tools")
 # A skill is a top-level directory holding a SKILL.md. Wrappers reference a single
 # path segment, so a nested SKILL.md could never satisfy the pairing check.
 SKILL_PATH = re.compile(r"[^/]+/SKILL\.md")
 # A wrapper's first line: what the picker displays, and what decides which skill
 # actually runs. The group is the target, and cannot begin with a dot.
-WRAPPER_LINE1 = re.compile(r"^Read the skill definition at ([A-Za-z0-9_-][\w.-]*)/SKILL\.md")
+# ${CLAUDE_PROJECT_DIR} is required, not optional: a bare relative path resolves only
+# when the shell's cwd happens to be the repo root, and Claude Code moves that cwd.
+WRAPPER_LINE1 = re.compile(
+    r"^Read the skill definition at \$\{CLAUDE_PROJECT_DIR\}/([A-Za-z0-9_-][\w.-]*)/SKILL\.md")
 SKILL_REF = re.compile(r"\b([A-Za-z0-9_-][\w.-]*)/SKILL\.md")
 FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*(?:\n|\Z)", re.S)
 # Prose describing a past availability state, rather than advertising a current one.
 PAST_TENSE = re.compile(r"no longer|previously|used to be|was marked|removed the", re.I)
 SEGMENT = re.compile(r"[|.]")
 ALLOW_MARKER = "<!-- validate: allow-coming-soon -->"
+# The plugin manifest is how every installed user reaches these skills. A path that
+# does not resolve drops one command with no error, so it is checked here as well as
+# by `claude plugin validate` in CI: contributors without the CLI still catch it.
+PLUGIN_MANIFEST = ".claude-plugin/plugin.json"
 
 # Documented shapes. The path classifies as strongly as the content: anything under
 # switches/ is held to the switch contract whatever keys it actually carries.
@@ -290,7 +301,51 @@ def check_docs_list_skills(files, skill_dirs):
     return read
 
 
-CHECKS = (check_skills, check_commands, check_yaml, check_availability, check_docs_list_skills)
+def check_plugin_manifest(files, skill_dirs):
+    """Every skill the plugin manifest advertises resolves to a real, matching skill."""
+    read = set()
+    if PLUGIN_MANIFEST not in files:
+        fail(PLUGIN_MANIFEST, "plugin manifest is missing; installed users would get no skills")
+        return read
+
+    text = read_text(PLUGIN_MANIFEST, require_newline=False)
+    if text is None:
+        return read
+    read.add(PLUGIN_MANIFEST)
+
+    try:
+        manifest = json.loads(text)
+    except json.JSONDecodeError as exc:
+        fail(PLUGIN_MANIFEST, f"is not valid JSON (line {exc.lineno}, column {exc.colno})")
+        return read
+
+    listed = manifest.get("skills")
+    if not isinstance(listed, list):
+        fail(PLUGIN_MANIFEST, f"'skills' must be a list, found {type(listed).__name__}")
+        return read
+
+    advertised = set()
+    for entry in listed:
+        if not isinstance(entry, str) or not entry.startswith("./"):
+            fail(PLUGIN_MANIFEST, f"skills entry {entry!r} must be a relative path starting './'")
+            continue
+        directory = entry[2:].rstrip("/")
+        skill = ROOT / directory / "SKILL.md"
+        if not skill.is_file():
+            fail(PLUGIN_MANIFEST, f"lists {entry}, which has no SKILL.md")
+            continue
+        advertised.add(directory)
+
+    # A skill on disk that the manifest omits is invisible to every installed user,
+    # which is the same outcome as not shipping it and is just as silent.
+    for directory in sorted(skill_dirs - advertised):
+        fail(PLUGIN_MANIFEST, f"does not list {directory}/, so installed users never see it")
+
+    return read
+
+
+CHECKS = (check_skills, check_commands, check_yaml, check_availability,
+          check_docs_list_skills, check_plugin_manifest)
 
 
 def run_checks(files):
@@ -303,8 +358,10 @@ def run_checks(files):
 
 # ---------------------------------------------------------------- self-test
 
-WRAPPER = "Read the skill definition at {name}/SKILL.md and execute it exactly as specified.\n"
-SKILL = "---\nname: {name}\nversion: 1.0.0\ndescription: d\nallowed-tools:\n  - Bash\n---\n\nbody\n"
+WRAPPER = ("Read the skill definition at ${{CLAUDE_PROJECT_DIR}}/{name}/SKILL.md"
+           " and execute it exactly as specified.\n")
+SKILL = "---\nname: {name}\ndescription: d\nallowed-tools:\n  - Bash\n---\n\nbody\n"
+MANIFEST = '{{"name": "jtbd", "skills": ["./{name}"]}}\n'
 
 
 def _base_fixture():
@@ -313,6 +370,7 @@ def _base_fixture():
         ".claude/commands/alpha.md": WRAPPER.format(name="alpha"),
         "README.md": "| `/alpha` | Available |\n",
         "CLAUDE.md": "- `/alpha` does things\n",
+        ".claude-plugin/plugin.json": MANIFEST.format(name="alpha"),
     }
 
 
@@ -359,7 +417,10 @@ def self_test():
                       ("---\nname: x\n-----------\n", "unterminated")]:
         require(parse_frontmatter(bad) == (None, kind), f"frontmatter accepted {bad!r}")
 
-    for line in ["", "<!-- x -->", "# heading", "Read the skill definition at ../SKILL.md"]:
+    for line in ["", "<!-- x -->", "# heading", "Read the skill definition at ../SKILL.md",
+                 # The pre-v1.6.0.0 form. It resolves only when cwd is the repo root.
+                 "Read the skill definition at alpha/SKILL.md",
+                 "Read the skill definition at ${CLAUDE_PROJECT_DIR}/../SKILL.md"]:
         require(not WRAPPER_LINE1.match(line), f"wrapper line 1 accepted {line!r}")
     require(WRAPPER_LINE1.match(WRAPPER.format(name="a")).group(1) == "a", "line 1 target not captured")
     require(SKILL_REF.findall("see ../SKILL.md") == [], "SKILL_REF allows parent traversal")
@@ -377,6 +438,21 @@ def self_test():
             "must start at byte 0", "displaced frontmatter not caught")
     rejects({**_base_fixture(), "alpha/SKILL.md": SKILL.format(name="wrong")},
             "!= directory", "name/directory mismatch not caught")
+
+    # The plugin manifest is the only path an installed user has to these skills, so
+    # each way it can silently drop one gets its own rejection case.
+    rejects({k: v for k, v in _base_fixture().items() if k != ".claude-plugin/plugin.json"},
+            "plugin manifest is missing", "absent plugin manifest not caught")
+    rejects({**_base_fixture(), ".claude-plugin/plugin.json": '{"name": "jtbd",,}\n'},
+            "not valid JSON", "malformed plugin manifest not caught")
+    rejects({**_base_fixture(), ".claude-plugin/plugin.json": '{"name": "jtbd"}\n'},
+            "'skills' must be a list", "plugin manifest without skills not caught")
+    rejects({**_base_fixture(), ".claude-plugin/plugin.json": MANIFEST.format(name="ghost")},
+            "has no SKILL.md", "unresolvable skills path not caught")
+    rejects({**_base_fixture(), ".claude-plugin/plugin.json": '{"name": "jtbd", "skills": ["alpha"]}\n'},
+            "must be a relative path", "skills entry without './' not caught")
+    rejects({**_base_fixture(), ".claude-plugin/plugin.json": '{"name": "jtbd", "skills": []}\n'},
+            "does not list alpha/", "skill missing from the manifest not caught")
     rejects({**_base_fixture(), "beta/SKILL.md": SKILL.format(name="beta"),
              "README.md": "| `/alpha` | Available |\n| `/beta` | Available |\n",
              "CLAUDE.md": "- `/alpha`\n- `/beta`\n"},

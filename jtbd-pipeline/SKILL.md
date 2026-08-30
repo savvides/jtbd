@@ -1,6 +1,5 @@
 ---
 name: jtbd-pipeline
-version: 1.0.0
 description: |
   Run the full JTBD analysis pipeline on a batch of interview transcripts.
   Analyzes each transcript into a Switch analysis, then finds cross-interview

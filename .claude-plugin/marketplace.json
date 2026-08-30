@@ -1,0 +1,17 @@
+{
+  "name": "jtbd",
+  "owner": {
+    "name": "Philippos Savvides",
+    "url": "https://github.com/savvides"
+  },
+  "description": "Jobs to Be Done skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "jtbd",
+      "source": "./",
+      "description": "Turn customer interview transcripts into structured, version-controlled demand evidence using Moesta's Switch methodology.",
+      "version": "1.6.0.0",
+      "author": { "name": "Philippos Savvides" }
+    }
+  ]
+}

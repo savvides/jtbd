@@ -1,1 +1,1 @@
-Read the skill definition at jtbd-forces/SKILL.md and execute it exactly as specified. Pass through any arguments: $ARGUMENTS
+Read the skill definition at ${CLAUDE_PROJECT_DIR}/jtbd-forces/SKILL.md and execute it exactly as specified. Pass through any arguments: $ARGUMENTS

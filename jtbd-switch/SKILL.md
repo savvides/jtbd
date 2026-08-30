@@ -1,6 +1,5 @@
 ---
 name: jtbd-switch
-version: 1.0.0
 description: |
   Analyze a customer interview transcript using Moesta's Switch methodology.
   Extracts the switching timeline, four forces (push/pull/anxiety/habit),
