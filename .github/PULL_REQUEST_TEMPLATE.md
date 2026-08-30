@@ -14,4 +14,6 @@
 
 - [ ] Tested with example transcript (`examples/sample-transcript.txt`)
 - [ ] Tested with a real interview transcript
-- [ ] YAML output validates (`python3 -c "import yaml; yaml.safe_load(open('file'))"`)
+- [ ] `python3 scripts/validate.py` passes — it parses every `.yml` outside `.github/`,
+      including ones you generated but have not staged yet. See TESTING.md.
+- [ ] `python3 scripts/validate.py --self-test` passes, if you changed the validator

@@ -18,13 +18,13 @@ This output gets saved to a `.jtbd/` directory so you can commit it alongside yo
 ### Install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/philippossavvides/jtbd/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/savvides/jtbd/main/install.sh | bash
 ```
 
 Or manually clone it:
 
 ```bash
-git clone https://github.com/philippossavvides/jtbd.git ~/.claude/skills/jtbd
+git clone https://github.com/savvides/jtbd.git ~/.claude/skills/jtbd
 ```
 
 ### Try it
@@ -82,7 +82,7 @@ You only need Claude Code to run these skills. There are no other dependencies.
 If you happen to use [gstack](https://github.com/garrytan/gstack), the skills chain naturally into its workflow:
 
 ```
-/jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-brief → /office-hours → /plan-eng-review → /ship
+/jtbd-interview → /jtbd-switch → /jtbd-patterns → /jtbd-forces → /jtbd-map → /jtbd-brief → /office-hours → /plan-eng-review → /ship
 ```
 
 You can also run the whole batch at once: `/jtbd-pipeline path/to/transcripts/`

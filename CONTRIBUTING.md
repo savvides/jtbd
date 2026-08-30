@@ -9,6 +9,9 @@ Each skill is a directory with a single `SKILL.md` file:
 ```
 jtbd-yourskill/
 └── SKILL.md
+
+.claude/commands/
+└── jtbd-yourskill.md
 ```
 
 The `SKILL.md` needs:
@@ -19,11 +22,17 @@ The `SKILL.md` needs:
 4. **An example output** showing the exact expected format
 5. **A human review step** using AskUserQuestion before writing files
 
+You also need `.claude/commands/<your-skill>.md`, a one-line wrapper pointing at your
+`SKILL.md`. A skill without a paired wrapper has no slash command, and CI fails.
+
+Before opening a PR, run `python3 scripts/validate.py`. See TESTING.md for what it
+checks.
+
 Look at `jtbd-switch/SKILL.md` or `jtbd-interview/SKILL.md` as reference implementations.
 
 ## YAML schema
 
-All `.jtbd/` files use `schema_version: 1`. If you're adding a skill that writes new file types to `.jtbd/`, document the schema in your SKILL.md and add an example to `demo/.jtbd/`.
+`manifest.yml` and patterns files use `schema_version: 1`; switch analyses and job maps do not. If you're adding a skill that writes new file types to `.jtbd/`, document the schema in your SKILL.md and add an example to `demo/.jtbd/`.
 
 ## Example transcripts
 

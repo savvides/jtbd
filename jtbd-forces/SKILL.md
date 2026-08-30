@@ -34,7 +34,7 @@ Use the `Read` tool to read the contents of the provided file.
 ## Process Data
 
 Determine the type of file based on its structure:
-- **Switch File:** If the file contains `interviewee:` and `forces:`, extract the `push`, `pull`, `anxiety`, and `habit` quotes and intensities.
+- **Switch File:** If the file contains `interviewee:` and `forces:`, extract the `push`, `pull`, `anxiety`, and `habit` entries. Each force is a list, and every entry has a `statement`, an `intensity`, a `confidence`, and a `quote` that is null (`~`) when the force was inferred rather than stated.
 - **Pattern File:** If the file contains `clusters:` and `force_patterns:`, extract the strongest push, pull, anxiety, and habit patterns.
 
 ## Generate HTML
@@ -48,4 +48,10 @@ Include the extracted quotes/patterns in the respective quadrants.
 ## Output
 
 Write the generated HTML to `.jtbd/forces/[filename-base].html` using the `Write` tool. (e.g., if input was `sarah-ops.yml`, output is `sarah-ops.html`).
-Inform the user where the file was saved.
+
+Tell the user where the file was saved, then:
+
+> **Next steps:**
+> - Open the diagram in a browser to check it reads clearly
+> - Run `/jtbd-map` to synthesize your patterns into a Job Map
+> - Run `/jtbd-brief` to turn that Job Map into a product brief
