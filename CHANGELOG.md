@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0.0] - 2026-08-31
+
+### Added
+- **First-class support for Google Antigravity and Gemini.** jtbd is now dual-compatible with Google Antigravity, Gemini, and Claude Code from a single source of truth:
+  - Added `GEMINI.md` (and `AGENTS.md`) at the repository root, providing Antigravity and Gemini with project instructions, skill listings, schema definitions, and skill routing rules.
+  - Added Antigravity plugin manifest and layout under `plugins/jtbd/plugin.json` and `plugins/jtbd/skills/`.
+  - Skill preambles in `/jtbd-demo` and `/jtbd-pipeline` now probe Antigravity plugin paths (`~/.gemini/config/plugins/jtbd`), Claude plugin paths (`${CLAUDE_PLUGIN_ROOT}`), workspace root, and global skill paths.
+  - `validate.py` now validates `GEMINI.md` skill listings alongside `CLAUDE.md` and `README.md`, and validates that skill preambles probe Antigravity plugin paths in addition to Claude plugin roots.
+
 ## [1.6.0.1] - 2026-08-30
 
 ### Fixed

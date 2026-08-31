@@ -105,10 +105,10 @@ repo layout fact rather than a defect.
 - A skill containing a ```bash block declares `Bash` in `allowed-tools`. Without it the
   block never runs and nothing says so: `/jtbd-demo` shipped that way from v1.0.0 to
   v1.6.0.1, its skills-root resolution dead code the whole time.
-- A skill that assigns `_JTBD_SKILLS` probes `${CLAUDE_PLUGIN_ROOT}`. A resolver that
-  checks only the repo root and `~/.claude/skills/jtbd` finds nothing under a plugin
-  install, which is where every installed user actually is. That is the v1.6.0.0
-  regression, and this is what stops it recurring.
+- A skill that assigns `_JTBD_SKILLS` probes `${CLAUDE_PLUGIN_ROOT}` and Antigravity
+  plugin paths (`~/.gemini/config/plugins/`). A resolver that checks only the repo root
+  and legacy clone paths finds nothing under a plugin install, which is where installed
+  users actually are.
 - No `git` line inside a ```bash block carries a `{...}` placeholder. Prose in these
   skills uses `{N}` and `{filename}` as fill-me-in markers, so the same braces on a
   runnable line get copied through literally. Commit `e001a78` in this repo reads
@@ -127,8 +127,8 @@ repo layout fact rather than a defect.
   is the part doing the real work.
 
 **Availability claims** (every `.md`)
-- Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has
-  no escapes: the three below belong to the "coming soon" check alone.
+- Every shipped skill is listed in `README.md`, `CLAUDE.md`, and `GEMINI.md`. That rule
+  has no escapes: the three below belong to the "coming soon" check alone.
 - No skill that ships in this repo is advertised as "coming soon", in prose or in a
   README table cell.
 
