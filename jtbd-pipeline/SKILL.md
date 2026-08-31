@@ -57,15 +57,20 @@ else
   echo "SWITCH_COUNT: 0"
 fi
 
-# Detect jtbd skill locations. Order matches jtbd-demo: plugin root, then the repo you
-# are working in, then a pre-v1.6.0.0 clone last. Every branch tests for an actual
-# SKILL.md, not just a directory — a leftover empty ~/.claude/skills/jtbd must not
-# outrank a working tree that really has the skills.
+# Detect jtbd skill locations. Order matches jtbd-demo: Claude plugin root, Antigravity
+# plugin paths, the repo you are working in, global skills paths, then a pre-v1.6.0.0 clone last.
+# Every branch tests for an actual SKILL.md, not just a directory.
 _JTBD_SKILLS=""
 if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/jtbd-switch/SKILL.md" ]; then
   _JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"
+elif [ -f "$HOME/.gemini/config/plugins/jtbd/jtbd-switch/SKILL.md" ]; then
+  _JTBD_SKILLS="$HOME/.gemini/config/plugins/jtbd"
+elif [ -f "$HOME/.gemini/config/plugins/savvides-jtbd/jtbd-switch/SKILL.md" ]; then
+  _JTBD_SKILLS="$HOME/.gemini/config/plugins/savvides-jtbd"
 elif [ -n "$_ROOT" ] && [ -f "$_ROOT/jtbd-switch/SKILL.md" ]; then
   _JTBD_SKILLS="$_ROOT"
+elif [ -f "$HOME/.gemini/config/skills/jtbd/jtbd-switch/SKILL.md" ]; then
+  _JTBD_SKILLS="$HOME/.gemini/config/skills/jtbd"
 elif [ -f "$HOME/.claude/skills/jtbd/jtbd-switch/SKILL.md" ]; then
   _JTBD_SKILLS="$HOME/.claude/skills/jtbd"
 fi
