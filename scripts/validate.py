@@ -49,6 +49,12 @@ FRONTMATTER = re.compile(r"\A---[ \t]*\n(.*?)\n---[ \t]*(?:\n|\Z)", re.S)
 PAST_TENSE = re.compile(r"no longer|previously|used to be|was marked|removed the", re.I)
 SEGMENT = re.compile(r"[|.]")
 ALLOW_MARKER = "<!-- validate: allow-coming-soon -->"
+
+# A fill-me-in marker: braces around a bare identifier, as the prose in these skills
+# writes {N} and {filename}. Deliberately does NOT match brace expansion
+# ({switches,patterns} — a comma) or a git format string ({%an} — a percent), both of
+# which are ordinary git usage.
+GIT_PLACEHOLDER = re.compile(r"\{[A-Za-z_][A-Za-z0-9_ -]*\}")
 # The plugin manifest is how every installed user reaches these skills. A path that
 # does not resolve drops one command with no error, so it is checked here as well as
 # by `claude plugin validate` in CI: contributors without the CLI still catch it.
@@ -344,8 +350,104 @@ def check_plugin_manifest(files, skill_dirs):
     return read
 
 
+def check_bash_declared(files, skill_dirs):
+    """A skill that runs a bash block declares Bash, or the block silently never runs.
+
+    jtbd-demo shipped a preamble it had no permission to execute from v1.0.0 through
+    v1.6.0.1: the whole skills-root resolution lived in a ```bash block while
+    allowed-tools listed only Read, Glob and AskUserQuestion. Nothing failed loudly.
+    """
+    read = set()
+    for rel in skill_paths(files):
+        text = read_text(rel)
+        if text is None:
+            continue
+        read.add(rel)
+        if "```bash" not in text:
+            continue
+
+        block, error = parse_frontmatter(text)
+        if error is not None:
+            continue  # check_skills already reported it
+        try:
+            meta = yaml.safe_load(block)
+        except yaml.YAMLError:
+            continue
+        if not isinstance(meta, dict):
+            continue
+
+        tools = meta.get("allowed-tools") or []
+        if isinstance(tools, str):
+            tools = [tools]
+        if "Bash" not in tools:
+            fail(rel, "has a ```bash block but does not list 'Bash' in allowed-tools, "
+                      "so the block never runs")
+    return read
+
+
+def check_plugin_root_probe(files, skill_dirs):
+    """A skill that resolves a skills root probes ${CLAUDE_PLUGIN_ROOT} to find it.
+
+    Plugin installs land under ~/.claude/plugins/, which is neither the repo root nor
+    the pre-v1.6.0.0 ~/.claude/skills/jtbd clone. A resolver that checks only those two
+    returns nothing for every installed user, and the skill dead-ends with no error.
+    That is the v1.6.0.0 regression; this keeps it from coming back.
+    """
+    read = set()
+    for rel in skill_paths(files):
+        text = read_text(rel)
+        if text is None:
+            continue
+        read.add(rel)
+        # An assignment, not a mention: the resolver is what has to probe.
+        if "_JTBD_SKILLS=" not in text:
+            continue
+        if "CLAUDE_PLUGIN_ROOT" not in text:
+            fail(rel, "resolves a skills root but never probes ${CLAUDE_PLUGIN_ROOT}, "
+                      "so it finds nothing under a plugin install")
+    return read
+
+
+def check_git_placeholders(files, skill_dirs):
+    """No `{...}` placeholder survives inside a git command in a bash block.
+
+    Prose in these skills uses `{N}`, `{filename}` and friends as fill-me-in markers, so
+    the same braces inside a runnable line read as literal text and get copied through.
+    Commit e001a78 in this repo's own history is `jtbd: pipeline analysis of {N}
+    interviews`, and an unsubstituted `git add .jtbd/x/{filename}.yml` fails its pathspec
+    and stages nothing — the v1.5.0.1 bug class. Use `<...>` in runnable lines instead,
+    with a sentence telling the reader to substitute.
+    """
+    read = set()
+    for rel in skill_paths(files):
+        text = read_text(rel)
+        if text is None:
+            continue
+        read.add(rel)
+        in_bash = False
+        for number, line in enumerate(text.splitlines(), 1):
+            if line.startswith("```"):
+                in_bash = line.startswith("```bash")
+                continue
+            if not in_bash:
+                continue
+            stripped = line.strip()
+            if not stripped.startswith("git "):
+                continue
+            # A brace-wrapped identifier only. Brace expansion ({switches,patterns}) and
+            # format strings ({%an}) are ordinary git usage and must pass, or the next
+            # contributor deletes the check instead of the placeholder.
+            found = GIT_PLACEHOLDER.search(stripped)
+            if found:
+                fail(rel, f"line {number}: git command carries the placeholder "
+                          f"{found.group(0)}, which gets run literally; use <...> and "
+                          f"say to substitute it")
+    return read
+
+
 CHECKS = (check_skills, check_commands, check_yaml, check_availability,
-          check_docs_list_skills, check_plugin_manifest)
+          check_docs_list_skills, check_plugin_manifest, check_bash_declared,
+          check_plugin_root_probe, check_git_placeholders)
 
 
 def run_checks(files):
@@ -476,6 +578,43 @@ def self_test():
             "missing trailing newline", "missing trailing newline not caught")
     rejects({**_base_fixture(), "CLAUDE.md": "nothing here\n"},
             "never lists it", "unadvertised skill not caught")
+
+    # A bash block the skill has no permission to run, and a skills-root resolver that
+    # cannot see a plugin install. Both shipped; both were silent.
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": "---\nname: alpha\ndescription: d\nallowed-tools:\n"
+                               "  - Read\n---\n\n```bash\necho hi\n```\n"},
+            "does not list 'Bash'", "undeclared bash block not caught")
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": SKILL.format(name="alpha")
+                               + '\n```bash\n_JTBD_SKILLS="$HOME/.claude/skills/jtbd"\n```\n'},
+            "never probes", "resolver without a plugin-root probe not caught")
+    require(_run_fixture({**_base_fixture(),
+                          "alpha/SKILL.md": SKILL.format(name="alpha")
+                          + '\n```bash\n_JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"\n```\n'}) == [],
+            "a resolver that does probe CLAUDE_PLUGIN_ROOT was rejected")
+
+    # A placeholder that runs literally: commit e001a78 shipped one to this repo.
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": SKILL.format(name="alpha")
+                               + '\n```bash\ngit commit -m "x {N} y"\n```\n'},
+            "carries the placeholder", "literal {...} in a git command not caught")
+    require(_run_fixture({**_base_fixture(),
+                          "alpha/SKILL.md": SKILL.format(name="alpha")
+                          + '\n```bash\ngit commit -m "x <N> y"\n```\n'}) == [],
+            "the <...> placeholder convention was rejected")
+    require(_run_fixture({**_base_fixture(),
+                          "alpha/SKILL.md": SKILL.format(name="alpha")
+                          + '\nprose may say {N} freely\n\n```python\nd = {"k": 1}\n```\n'}) == [],
+            "braces outside a bash git line were rejected")
+    # The false positive is the real risk: a check that fires on correct git usage gets
+    # deleted by the next contributor, and the protection goes with it.
+    for ok in ['git add .jtbd/{switches,patterns}', "git log --format='%h {%s}'",
+               'git checkout -- {a,b}', 'git log --pretty=format:"{%an}"']:
+        require(_run_fixture({**_base_fixture(),
+                              "alpha/SKILL.md": SKILL.format(name="alpha")
+                              + f'\n```bash\n{ok}\n```\n'}) == [],
+                f"legitimate git usage was rejected: {ok}")
 
     require(_run_fixture({**_base_fixture(),
                           "CHANGELOG.md": "- `/alpha` is no longer marked coming soon.\n"}) == [],

@@ -30,8 +30,13 @@ deliberate: an earlier version degraded to a partial no-op when PyYAML was absen
 and still printed "All checks passed", which is the one failure mode a validator
 must never have.
 
-CI runs the self-test and then the validator on every push to `main` and every
-pull request (`.github/workflows/test.yml`).
+CI runs the self-test, then the validator, then `claude plugin validate` against both
+manifests, on every push to `main` and every pull request (`.github/workflows/test.yml`).
+
+The job is named `run-lint`, and that name is load-bearing. GitHub reports the job id as
+the status check context, and the "Protect Main Branch" ruleset requires a check called
+`run-lint`. Rename the job and the required check never reports, which leaves every pull
+request to `main` permanently unmergeable through the normal path.
 
 ## What it checks
 
@@ -96,6 +101,31 @@ manifest is validated with `--strict`; the plugin manifest is not, because `--st
 reports this repo's own `CLAUDE.md` at the plugin root as a warning, and that is a
 repo layout fact rather than a defect.
 
+**Skill runtime contracts** (`*/SKILL.md`)
+- A skill containing a ```bash block declares `Bash` in `allowed-tools`. Without it the
+  block never runs and nothing says so: `/jtbd-demo` shipped that way from v1.0.0 to
+  v1.6.0.1, its skills-root resolution dead code the whole time.
+- A skill that assigns `_JTBD_SKILLS` probes `${CLAUDE_PLUGIN_ROOT}`. A resolver that
+  checks only the repo root and `~/.claude/skills/jtbd` finds nothing under a plugin
+  install, which is where every installed user actually is. That is the v1.6.0.0
+  regression, and this is what stops it recurring.
+- No `git` line inside a ```bash block carries a `{...}` placeholder. Prose in these
+  skills uses `{N}` and `{filename}` as fill-me-in markers, so the same braces on a
+  runnable line get copied through literally. Commit `e001a78` in this repo reads
+  `jtbd: pipeline analysis of {N} interviews`, and an unsubstituted
+  `git add .jtbd/switches/{filename}.yml` fails its pathspec and stages nothing, which
+  is the v1.5.0.1 bug all over again. Runnable lines use `<...>` plus a sentence telling
+  the reader to substitute. Braces in prose, or in a non-bash block, are untouched, and
+  so are brace expansion (`{switches,patterns}`) and format strings (`{%an}`) — the
+  pattern matches a brace-wrapped bare identifier only, with fixtures pinning all four
+  of those legitimate forms, because a check that fires on correct code gets deleted.
+
+  Be clear about what this buys. `<N>` is exactly as copyable as `{N}`; the check
+  enforces a spelling, not a substitution, and cannot tell whether the model actually
+  filled the value in. What it does is stop the placeholder style that reads as
+  fill-me-in prose from appearing on a line that runs. The sentence next to each command
+  is the part doing the real work.
+
 **Availability claims** (every `.md`)
 - Every shipped skill is listed in both `README.md` and `CLAUDE.md`. That rule has
   no escapes: the three below belong to the "coming soon" check alone.
@@ -122,10 +152,20 @@ pattern-matching. A manual proof only covers the day you wrote it.
 
 Fixtures currently pin: displaced frontmatter, a name/directory mismatch, a missing
 trailing newline, a skill with no wrapper, a wrapper whose line 1 runs a different
-skill, a dangling `SKILL.md` reference, a `Coming soon` table cell, a neighbouring
-clause trying to defuse one, unparseable YAML, an incomplete switch analysis, a
-switch analysis missing `interviewee`, and an unadvertised skill. Disabling any of
-those check bodies fails the self-test. Whole runs take about 0.4s.
+skill, a dangling `SKILL.md`
+reference, a `Coming soon` table cell, a neighbouring clause trying to defuse one,
+unparseable YAML, an incomplete switch analysis, a switch analysis missing
+`interviewee`, an unadvertised skill, and six ways the plugin manifest can silently
+drop a command: absent, malformed JSON, no `skills` list, an entry that is not
+`./`-relative, an entry that resolves to no `SKILL.md`, and a skill on disk the list
+omits. Two more pin the runtime contracts: a bash block in a skill that does not declare
+`Bash`, and a `_JTBD_SKILLS` resolver that never probes `${CLAUDE_PLUGIN_ROOT}` (with a
+positive case proving a resolver that does probe is accepted). Disabling any of those
+check bodies fails the self-test.
+
+Separately, and not via a fixture, `self_test()` asserts the `WRAPPER_LINE1` regex
+directly against the wrapper line 1 forms it must reject: blank, a comment, a heading,
+a parent traversal, and the pre-v1.6.0.0 bare relative path. Whole runs take about 0.7s.
 
 `self_test()` reports failures explicitly instead of using `assert`, because
 `python3 -O` strips assertions. Keep it that way: a self-test that passes under

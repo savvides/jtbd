@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0.1] - 2026-08-30
+
+### Fixed
+- **`/jtbd-demo` dead-ended for everyone who installed the plugin.** Its preamble looked for the example transcript and demo data in the jtbd repo root or in `~/.claude/skills/jtbd/`. A plugin install lands under `~/.claude/plugins/`, so a user following the README — install the plugin, run `/jtbd-demo` — got "Demo files not found" and stopped. Both resolvers now probe `${CLAUDE_PLUGIN_ROOT}` first, then the repo you are working in, then a pre-v1.6.0.0 clone. Verified against a plugin root built to the layout a `source: "./"` plugin install produces: `DEMO_ASSETS: yes` from a directory outside any git repo, where the old preamble reported `NOT_FOUND`. A real `/plugin install` remains unverified — see TODOS.md.
+- **`/jtbd-demo` never had permission to run its own preamble.** `allowed-tools` listed `Read`, `Glob` and `AskUserQuestion` — no `Bash` — while the entire skills-root resolution lived in a ```bash block. It has been that way since v1.0.0, so the resolution the rest of the skill depends on silently never ran. `Bash` is now declared, and `validate.py` rejects any skill with a bash block that does not declare it.
+- **`/jtbd-demo` told users to type paths that only work inside this repo.** Four places — including the walkthrough's closing call to action — printed bare `examples/sample-transcript.txt`, `docs/methodology.md` and `demo/.jtbd/`. A plugin user is in their own project, where none of those resolve. Each now carries the resolved skills root.
+- **`/jtbd-pipeline` handed its sub-agents a path that does not resolve.** Its body referenced a bare `jtbd-switch/SKILL.md` for the extraction rules, so agents dispatched from another project either failed the read or improvised the methodology from memory — producing switch analyses that never followed the versioned rules. Both references are now anchored to the resolved root.
+- `/jtbd-pipeline` ranked a leftover `~/.claude/skills/jtbd` above the repo you are working in, and accepted it on a bare directory test, so an empty or stale pre-v1.6.0.0 clone outranked a working tree that actually had the skills. It is now checked last, and every branch tests for a real `SKILL.md`.
+- The message `/jtbd-demo` printed when it could not find its files told you to `git clone` the repo into `~/.claude/skills/jtbd`. That is the install v1.6.0.0 removed for registering nothing, so the recovery advice rebuilt the broken state. It now names the two plugin commands and points at the issue tracker.
+- README's "Try it", "What you get" and troubleshooting sections told plugin users to paste `examples/sample-transcript.txt` and run `scripts/validate.py` from a repo they do not have a copy of.
+
+### For contributors
+- **Every skill that commits told the model to run a `{...}` placeholder literally.** `/jtbd-switch`, `/jtbd-patterns`, `/jtbd-interview` and `/jtbd-pipeline` all put `git add .jtbd/.../{filename}.yml` and a `{N}`-style commit message inside a bash block. The same braces mean "fill this in" in the surrounding prose, so on a runnable line they get copied through: commit `e001a78` in this repo reads `jtbd: pipeline analysis of {N} interviews`, and an unsubstituted `git add` fails its pathspec and stages nothing, which is the v1.5.0.1 bug again. All four now use `<...>` and say to substitute it. The check enforces the spelling, not the substitution — `<N>` is as copyable as `{N}`; the sentence beside each command is what does the real work.
+- `validate.py` gained three checks for the failure classes above: a skill with a ```bash block must declare `Bash`, a skill that resolves a skills root must probe `${CLAUDE_PLUGIN_ROOT}`, and no `git` line in a bash block carries a `{...}` placeholder. All three have self-test fixtures, and all three were confirmed to fail against the real bugs before being committed.
+- `CLAUDE.md` marks `/jtbd-forces`, `/jtbd-map` and `/jtbd-brief` as Preview, matching README. `TESTING.md` documents the `claude plugin validate` CI steps, records why the CI job has to stay named `run-lint`, and lists the six plugin-manifest fixtures added in 1.6.0.0.
+
 ## [1.6.0.0] - 2026-08-30
 
 ### Fixed
@@ -12,11 +28,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`. The repository is its own plugin marketplace, so installs are versioned and `/plugin update` and uninstall work.
 - `validate.py` checks the plugin manifest: that it exists, is valid JSON, that `skills` is a list of `./`-relative paths, that every entry resolves to a real `SKILL.md`, and that no skill on disk is missing from the list. Each way the manifest can silently drop a command has its own self-test fixture; disabling the check body fails all six.
-- The CI job is renamed `validate` -> `run-lint`, because the "Protect Main Branch" ruleset requires a status check named `run-lint` and no workflow produced one. The required check could never report, so every pull request to `main` was permanently unmergeable through the normal path. The job id is what GitHub uses as the check context, so it has to match the rule.
 - CI runs `claude plugin validate` against both manifests. That is the authoritative check, maintained against the real plugin loader; the validator's own checks mirror the path resolution so contributors without the CLI catch the common mistake locally.
 - README sections for what jtbd is *not*, what it costs to run (including that `/jtbd-pipeline` fans out to 4 concurrent agents), and troubleshooting a plugin install that registers no commands.
 
 ### Changed
+- The CI job is renamed `validate` -> `run-lint`, because the "Protect Main Branch" ruleset requires a status check named `run-lint` and no workflow produced one. The required check could never report, so every pull request to `main` was permanently unmergeable through the normal path. The job id is what GitHub uses as the check context, so it has to match the rule.
 - Skill frontmatter no longer carries `version`. It is not a Claude Code frontmatter field and not one of the six Agent Skills spec fields, so carrying it blocked claude.ai packaging — and all eight were stale at `1.0.0` against a `VERSION` of `1.5.0.1`. The plugin manifest is now the single source of truth for the collection's version.
 - `/jtbd-forces`, `/jtbd-map` and `/jtbd-brief` are marked **Preview** in the README rather than Available, with the reason stated: `/jtbd-map` emits a schema that does not carry every field `/jtbd-brief` requires, so on the default path part of a generated brief has no source in your data. Tracked in TODOS.md.
 

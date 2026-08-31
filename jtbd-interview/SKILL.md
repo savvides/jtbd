@@ -416,9 +416,13 @@ Create the `.jtbd/interviews/` directory if it doesn't exist.
 
 2. If `GIT` is `yes` and the manifest has `auto_commit: true`:
 
+Substitute the real filename and context for `<filename>` and `<context description>`
+before running this. They sit in a bash block and are copied verbatim unless you replace
+them: an unsubstituted `git add` fails the pathspec and stages nothing.
+
 ```bash
-git add .jtbd/interviews/{filename}.md
-git commit -m "jtbd: add interview script for {context description}"
+git add .jtbd/interviews/<filename>.md
+git commit -m "jtbd: add interview script for <context description>"
 ```
 
 If the commit fails, write the file but skip the commit. Tell the user: "File written to .jtbd/interviews/{filename}.md but not committed. Run `git add` and `git commit` manually."

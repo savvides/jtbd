@@ -21,7 +21,11 @@ The `SKILL.md` needs:
 1. **YAML frontmatter** with `name`, `description`, and `allowed-tools`. Do not add
    `version` — it is not a Claude Code frontmatter field, and the plugin manifest is
    the single source of truth for the collection's version.
-2. **A preamble bash block** that detects `.jtbd/` and gstack
+2. **A preamble bash block** that detects `.jtbd/` and gstack. If you include one, list
+   `Bash` in `allowed-tools` or it never runs. If your skill reads anything bundled with
+   the plugin, resolve the root by probing `${CLAUDE_PLUGIN_ROOT}` first (see
+   `jtbd-demo/SKILL.md`), and anchor every bundled path to it — including paths you print
+   for the user to type. The validator enforces both.
 3. **Clear instructions** for Claude on what to extract/generate
 4. **An example output** showing the exact expected format
 5. **A human review step** using AskUserQuestion before writing files
