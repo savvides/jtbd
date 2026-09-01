@@ -146,22 +146,6 @@ This repo is 1,735 lines of prompt and CLAUDE.md has no section telling a contri
 what to run when they edit one. It cannot until the eval harness above exists. Add it
 in the same change as the harness, naming which suites to run and against what baseline.
 
-### Cross-agent portability via the Agent Skills spec
-**Priority:** P3
-**Found:** v1.6.0.0 CEO plan review
-
-`agentskills.io` is an open standard making skills portable to Cursor, Codex CLI,
-Gemini CLI and 30+ agents. v1.6.0.0 removed the blocking `version` frontmatter field,
-so the door is open: restricting frontmatter to the six spec fields and adding `license`
-and `compatibility` is what remains.
-
-Deliberately deferred, with a tradeoff worth recording. The skills lean on bash
-preambles, `AskUserQuestion` and `${CLAUDE_PROJECT_DIR}`, none of which port, so
-portability would be partial and has to be described honestly. Extracting the preamble
-to a shared script sourced via `${CLAUDE_PLUGIN_ROOT}` makes the runtime *less* portable,
-not more. Net: the frontmatter door opened while the runtime door closed further. Revisit
-only on evidence someone wants this outside Claude Code.
-
 ### Only one example transcript, one persona
 **Priority:** P3
 **Found:** v1.6.0.0 CEO plan review
@@ -219,6 +203,12 @@ quotes. `.jtbd/.gitignore` covers only `raw/`, and neither skill carries the PII
 warning `/jtbd-switch` shows before writing.
 
 ## Completed
+
+### Cross-agent support for Google Antigravity & Gemini
+**Priority:** was P3
+**Completed:** v1.7.0.0 (2026-08-31)
+
+Added first-class support for Google Antigravity and Gemini alongside Claude Code. Added `GEMINI.md` and `AGENTS.md` project rules, `plugins/jtbd/plugin.json` Antigravity plugin manifest, expanded preamble asset resolvers across both platforms, and added validator enforcement for `GEMINI.md` and dual probe paths with self-tests.
 
 ### Every documented install path produced skills Claude Code could not see
 **Priority:** was P0

@@ -1,10 +1,10 @@
-# jtbd: Jobs to Be Done Skills for Claude Code
+# jtbd: Jobs to Be Done Skills for Antigravity, Gemini & Claude Code
 
 These tools convert raw customer interviews into structured demand evidence you can actually version control. They are based on [Moesta's Switch methodology](docs/methodology.md).
 
 ## What it does
 
-After running a customer interview, you paste the transcript into Claude Code. The skills generate a YAML file in your repository containing:
+After running a customer interview, you paste the transcript into your agent (Google Antigravity, Gemini, or Claude Code). The skills generate a YAML file in your repository containing:
 
 - **The switching timeline:** first thought, passive looking, active looking, deciding, and consuming.
 - **The four forces:** push, pull, anxiety, and habit, complete with direct quotes and intensity scores.
@@ -17,13 +17,19 @@ This output gets saved to a `.jtbd/` directory so you can commit it alongside yo
 
 ### Install
 
-Run these two commands inside Claude Code:
+#### In Google Antigravity & Gemini
+Install as an Antigravity plugin:
+```bash
+git clone https://github.com/savvides/jtbd.git ~/.gemini/config/plugins/jtbd
+```
+Or when working directly inside this workspace, Antigravity and Gemini automatically discover `GEMINI.md` and the root skills.
 
+#### In Claude Code
+Run these two commands inside Claude Code:
 ```
 /plugin marketplace add savvides/jtbd
 /plugin install jtbd@jtbd
 ```
-
 Then restart Claude Code, or run `/reload-plugins`.
 
 Verify it worked by typing `/jtbd` and checking that eight commands appear. If none do, see [Troubleshooting](#troubleshooting).

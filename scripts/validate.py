@@ -294,7 +294,7 @@ def check_availability(files, skill_dirs):
 def check_docs_list_skills(files, skill_dirs):
     """Every shipped skill is advertised where users look for it."""
     read = set()
-    for rel in (r for r in files if r in {"README.md", "CLAUDE.md"}):
+    for rel in (r for r in files if r in {"README.md", "CLAUDE.md", "GEMINI.md"}):
         text = read_text(rel, require_newline=False)
         if text is None:
             continue
@@ -302,7 +302,7 @@ def check_docs_list_skills(files, skill_dirs):
         for skill in sorted(skill_dirs):
             if f"/{skill}" not in text:
                 fail(rel, f"ships {skill} but never lists it")
-    for rel in {"README.md", "CLAUDE.md"} - read:
+    for rel in {"README.md", "CLAUDE.md", "GEMINI.md"} - read:
         fail(rel, "is missing, so skill listings cannot be verified")
     return read
 
@@ -386,12 +386,12 @@ def check_bash_declared(files, skill_dirs):
 
 
 def check_plugin_root_probe(files, skill_dirs):
-    """A skill that resolves a skills root probes ${CLAUDE_PLUGIN_ROOT} to find it.
+    """A skill that resolves a skills root probes ${CLAUDE_PLUGIN_ROOT} and Antigravity paths to find it.
 
-    Plugin installs land under ~/.claude/plugins/, which is neither the repo root nor
-    the pre-v1.6.0.0 ~/.claude/skills/jtbd clone. A resolver that checks only those two
-    returns nothing for every installed user, and the skill dead-ends with no error.
-    That is the v1.6.0.0 regression; this keeps it from coming back.
+    Plugin installs land under ~/.claude/plugins/ or ~/.gemini/config/plugins/, which is
+    neither the repo root nor the pre-v1.6.0.0 ~/.claude/skills/jtbd clone. A resolver
+    that checks only those two returns nothing for every installed user, and the skill
+    dead-ends with no error. That is the v1.6.0.0 regression; this keeps it from coming back.
     """
     read = set()
     for rel in skill_paths(files):
@@ -404,7 +404,10 @@ def check_plugin_root_probe(files, skill_dirs):
             continue
         if "CLAUDE_PLUGIN_ROOT" not in text:
             fail(rel, "resolves a skills root but never probes ${CLAUDE_PLUGIN_ROOT}, "
-                      "so it finds nothing under a plugin install")
+                      "so it finds nothing under a Claude Code plugin install")
+        if ".gemini/config/plugins" not in text:
+            fail(rel, "resolves a skills root but never probes Antigravity plugin paths "
+                      "(~/.gemini/config/plugins), so it finds nothing under an Antigravity plugin install")
     return read
 
 
@@ -472,6 +475,7 @@ def _base_fixture():
         ".claude/commands/alpha.md": WRAPPER.format(name="alpha"),
         "README.md": "| `/alpha` | Available |\n",
         "CLAUDE.md": "- `/alpha` does things\n",
+        "GEMINI.md": "- `/alpha` does things\n",
         ".claude-plugin/plugin.json": MANIFEST.format(name="alpha"),
     }
 
@@ -557,11 +561,14 @@ def self_test():
             "does not list alpha/", "skill missing from the manifest not caught")
     rejects({**_base_fixture(), "beta/SKILL.md": SKILL.format(name="beta"),
              "README.md": "| `/alpha` | Available |\n| `/beta` | Available |\n",
-             "CLAUDE.md": "- `/alpha`\n- `/beta`\n"},
+             "CLAUDE.md": "- `/alpha`\n- `/beta`\n",
+             "GEMINI.md": "- `/alpha`\n- `/beta`\n"},
             "has no wrapper", "skill without a wrapper not caught")
     rejects({**_base_fixture(), ".claude/commands/alpha.md": WRAPPER.format(name="other")
              + "see alpha/SKILL.md\n", "other/SKILL.md": SKILL.format(name="other"),
-             "README.md": "| `/alpha` | `/other` |\n", "CLAUDE.md": "- `/alpha` `/other`\n"},
+             "README.md": "| `/alpha` | `/other` |\n",
+             "CLAUDE.md": "- `/alpha` `/other`\n",
+             "GEMINI.md": "- `/alpha` `/other`\n"},
             "line 1 runs", "mispointed wrapper line 1 not caught")
     rejects({**_base_fixture(), "README.md": "| `/alpha` | Coming soon |\n"},
             "marked 'coming soon'", "README table availability claim not caught")
@@ -577,7 +584,9 @@ def self_test():
     rejects({**_base_fixture(), "alpha/SKILL.md": SKILL.format(name="alpha").rstrip("\n")},
             "missing trailing newline", "missing trailing newline not caught")
     rejects({**_base_fixture(), "CLAUDE.md": "nothing here\n"},
-            "never lists it", "unadvertised skill not caught")
+            "never lists it", "unadvertised skill in CLAUDE.md not caught")
+    rejects({**_base_fixture(), "GEMINI.md": "nothing here\n"},
+            "never lists it", "unadvertised skill in GEMINI.md not caught")
 
     # A bash block the skill has no permission to run, and a skills-root resolver that
     # cannot see a plugin install. Both shipped; both were silent.
@@ -589,10 +598,16 @@ def self_test():
              "alpha/SKILL.md": SKILL.format(name="alpha")
                                + '\n```bash\n_JTBD_SKILLS="$HOME/.claude/skills/jtbd"\n```\n'},
             "never probes", "resolver without a plugin-root probe not caught")
+    rejects({**_base_fixture(),
+             "alpha/SKILL.md": SKILL.format(name="alpha")
+                               + '\n```bash\n_JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"\n```\n'},
+            "never probes Antigravity", "resolver without Antigravity probe not caught")
     require(_run_fixture({**_base_fixture(),
                           "alpha/SKILL.md": SKILL.format(name="alpha")
-                          + '\n```bash\n_JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"\n```\n'}) == [],
-            "a resolver that does probe CLAUDE_PLUGIN_ROOT was rejected")
+                          + '\n```bash\n_JTBD_SKILLS="$CLAUDE_PLUGIN_ROOT"\n'
+                          + '[ -z "$_JTBD_SKILLS" ] && _JTBD_SKILLS="$HOME/.gemini/config/plugins/jtbd"\n'
+                          + '```\n'}) == [],
+            "a resolver that probes both Claude and Antigravity plugin paths was rejected")
 
     # A placeholder that runs literally: commit e001a78 shipped one to this repo.
     rejects({**_base_fixture(),
