@@ -2,6 +2,10 @@
 # Cross-interview pattern analysis from 3 switch analyses
 
 schema_version: 1
+provenance:
+  skill: "jtbd-patterns"
+  version: "1.8.0.0"
+  created_at: "2026-04-15"
 analysis_date: 2026-04-15
 switch_files_analyzed: 3
 files_included:

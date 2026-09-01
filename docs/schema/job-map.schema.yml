@@ -1,0 +1,73 @@
+# Schema: JTBD Job Map (.jtbd/jobs/*.yml)
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "JTBDJobMap"
+type: "object"
+required:
+  - "schema_version"
+  - "provenance"
+  - "job"
+  - "frequency"
+  - "confidence"
+  - "steps"
+  - "switching_trigger"
+  - "forces_summary"
+properties:
+  schema_version:
+    type: "integer"
+    enum: [1]
+    description: "Schema version for job map format."
+  provenance:
+    type: "object"
+    required:
+      - "skill"
+      - "version"
+      - "created_at"
+    properties:
+      skill:
+        type: "string"
+      version:
+        type: "string"
+      created_at:
+        type: "string"
+  job:
+    type: "string"
+    description: "Core Job to Be Done statement."
+  frequency:
+    type: "string"
+    description: "Occurrence frequency across interview evidence (e.g. 3/3 interviews)."
+  confidence:
+    type: "string"
+    enum: ["low", "medium", "high"]
+  steps:
+    type: "array"
+    items:
+      type: "object"
+      required:
+        - "name"
+        - "friction"
+        - "opportunity"
+      properties:
+        name:
+          type: "string"
+        friction:
+          type: "string"
+        opportunity:
+          type: "string"
+  switching_trigger:
+    type: "string"
+  forces_summary:
+    type: "object"
+    required:
+      - "what_pushes"
+      - "what_pulls"
+      - "what_scares"
+      - "what_holds"
+    properties:
+      what_pushes:
+        type: "string"
+      what_pulls:
+        type: "string"
+      what_scares:
+        type: "string"
+      what_holds:
+        type: "string"

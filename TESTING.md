@@ -67,15 +67,18 @@ single path segment, so a nested `SKILL.md` could never satisfy the pairing chec
 - Parses. The `.jtbd/` directory is version-controlled evidence, and the machine
   readable half is worthless if it does not load.
 - Each document carries the keys its shape documents: switch analyses
-  (`interviewee`, `timeline`, `forces`, `job_story`, `evidence_strength`), patterns
-  files (`schema_version`, `clusters`, `force_patterns`), job maps (`job`, `steps`),
+  (`schema_version`, `provenance`, `interviewee`, `timeline`, `forces`, `job_story`, `evidence_strength`), patterns
+  files (`schema_version`, `provenance`, `clusters`, `force_patterns`), job maps
+  (`schema_version`, `provenance`, `job`, `steps`, `forces_summary`, `switching_trigger`),
   and `manifest.yml` (`schema_version`, `product`, `target_user`, `settings`).
   Shape is resolved in a fixed order, and the path counts as much as the content:
   an `interviewee` key marks a switch wherever the file sits, and so does living
   under `switches/` — a patterns or job-map file placed there is still held to the
   switch contract. Then `manifest.yml` by name, then `patterns/` or a `clusters`
-  key, then `jobs/` or a `steps` key. A file none of those place is parsed but not
-  shape-checked.
+  key, then `jobs/` or a `steps` key. Formal schema definitions live under `docs/schema/`.
+- `schema_version` must be integer `1`.
+- Generated artifacts (`switch`, `patterns`, `job map`) must include a `provenance`
+  mapping with `skill`, `version`, and `created_at`.
 - Parse errors report type and position only, never the offending source line.
   These files hold interviewee names and verbatim quotes, and CI logs outlive the
   file they came from.

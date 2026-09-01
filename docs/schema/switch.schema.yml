@@ -1,0 +1,145 @@
+# Schema: JTBD Switch Analysis (.jtbd/switches/*.yml)
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "JTBDSwitchAnalysis"
+type: "object"
+required:
+  - "schema_version"
+  - "provenance"
+  - "interviewee"
+  - "timeline"
+  - "forces"
+  - "job_story"
+  - "evidence_strength"
+properties:
+  schema_version:
+    type: "integer"
+    enum: [1]
+    description: "Schema version for switch analysis format."
+  provenance:
+    type: "object"
+    required:
+      - "skill"
+      - "version"
+      - "created_at"
+    properties:
+      skill:
+        type: "string"
+        description: "Name of the skill used to generate the analysis."
+      version:
+        type: "string"
+        description: "Version of jtbd suite used."
+      created_at:
+        type: "string"
+        description: "Date when analysis was run (YYYY-MM-DD)."
+  interviewee:
+    type: "object"
+    required:
+      - "name"
+      - "role"
+      - "company"
+    properties:
+      name:
+        type: "string"
+      role:
+        type: "string"
+      company:
+        type: "string"
+      date:
+        type: "string"
+  timeline:
+    type: "object"
+    required:
+      - "first_thought"
+      - "passive_looking"
+      - "active_looking"
+      - "deciding"
+      - "consuming"
+    properties:
+      first_thought:
+        type: "object"
+        required: ["trigger", "confidence"]
+      passive_looking:
+        type: "object"
+        required: ["actions", "confidence"]
+      active_looking:
+        type: "object"
+        required: ["actions", "confidence"]
+      deciding:
+        type: "object"
+        required: ["chose", "deciding_factors", "confidence"]
+      consuming:
+        type: "object"
+        required: ["confidence"]
+  forces:
+    type: "object"
+    required:
+      - "push"
+      - "pull"
+      - "anxiety"
+      - "habit"
+    properties:
+      push:
+        type: "array"
+        items:
+          $ref: "#/definitions/force_item"
+      pull:
+        type: "array"
+        items:
+          $ref: "#/definitions/force_item"
+      anxiety:
+        type: "array"
+        items:
+          $ref: "#/definitions/force_item"
+      habit:
+        type: "array"
+        items:
+          $ref: "#/definitions/force_item"
+  job_story:
+    type: "string"
+    description: "Standard When/Want to/So I can job story synthesis."
+  evidence_strength:
+    type: "object"
+    required:
+      - "direct_quotes"
+      - "behavioral_specificity"
+      - "timeline_clarity"
+      - "overall"
+    properties:
+      direct_quotes:
+        type: "integer"
+        minimum: 1
+        maximum: 10
+      behavioral_specificity:
+        type: "integer"
+        minimum: 1
+        maximum: 10
+      timeline_clarity:
+        type: "integer"
+        minimum: 1
+        maximum: 10
+      overall:
+        type: "integer"
+        minimum: 1
+        maximum: 10
+
+definitions:
+  force_item:
+    type: "object"
+    required:
+      - "statement"
+      - "intensity"
+      - "confidence"
+    properties:
+      statement:
+        type: "string"
+      quote:
+        type: ["string", "null"]
+      intensity:
+        type: "integer"
+        minimum: 1
+        maximum: 10
+      confidence:
+        type: "string"
+        enum: ["low", "medium", "high"]
+      inferred:
+        type: "boolean"

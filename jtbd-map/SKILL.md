@@ -47,6 +47,13 @@ Write two files:
 
 ```yaml
 # Synthesized from patterns analysis
+
+schema_version: 1
+provenance:
+  skill: "jtbd-map"
+  version: "1.8.0.0"
+  created_at: "<YYYY-MM-DD>"
+
 job: "<Main Job Statement>"
 frequency: "<N/Total> interviews"
 confidence: high  # high | medium | low

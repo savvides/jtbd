@@ -168,6 +168,10 @@ Generate a YAML file following this structure:
 # Cross-interview pattern analysis from {N} switch analyses
 
 schema_version: 1
+provenance:
+  skill: "jtbd-patterns"
+  version: "1.8.0.0"
+  created_at: "{YYYY-MM-DD}"
 analysis_date: {YYYY-MM-DD}
 switch_files_analyzed: {N}
 files_included:
