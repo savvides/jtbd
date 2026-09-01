@@ -62,10 +62,11 @@ PLUGIN_MANIFEST = ".claude-plugin/plugin.json"
 
 # Documented shapes. The path classifies as strongly as the content: anything under
 # switches/ is held to the switch contract whatever keys it actually carries.
-SWITCH_KEYS = ("interviewee", "timeline", "forces", "job_story", "evidence_strength")
-PATTERNS_KEYS = ("schema_version", "clusters", "force_patterns")
-JOB_KEYS = ("job", "steps")
+SWITCH_KEYS = ("schema_version", "provenance", "interviewee", "timeline", "forces", "job_story", "evidence_strength")
+PATTERNS_KEYS = ("schema_version", "provenance", "clusters", "force_patterns")
+JOB_KEYS = ("schema_version", "provenance", "job", "steps", "forces_summary", "switching_trigger")
 MANIFEST_KEYS = ("schema_version", "product", "target_user", "settings")
+PROVENANCE_KEYS = ("skill", "version", "created_at")
 
 failures = []
 
@@ -224,13 +225,15 @@ def classify_yaml(rel, doc):
     """Name the documented shape this file must satisfy, or None."""
     if not isinstance(doc, dict):
         return None
+    if rel.startswith("docs/schema/"):
+        return None
     if "interviewee" in doc or "/switches/" in rel or rel == "examples/expected-output.yml":
         return "switch", SWITCH_KEYS
     if rel.endswith("manifest.yml"):
         return "manifest", MANIFEST_KEYS
     if "/patterns/" in rel or "clusters" in doc:
         return "patterns", PATTERNS_KEYS
-    if "/jobs/" in rel or "steps" in doc:
+    if "/jobs/" in rel or ("job" in doc and "steps" in doc):
         return "job map", JOB_KEYS
     return None
 
@@ -258,6 +261,19 @@ def check_yaml(files, skill_dirs):
         for key in keys:
             if key not in doc:
                 fail(rel, f"{label} is missing top-level '{key}'")
+
+        if "schema_version" in keys and "schema_version" in doc:
+            if doc.get("schema_version") != 1:
+                fail(rel, f"{label} schema_version must be 1, found {doc.get('schema_version')!r}")
+
+        if "provenance" in keys and "provenance" in doc:
+            prov = doc.get("provenance")
+            if not isinstance(prov, dict):
+                fail(rel, f"{label} provenance must be a mapping, found {type(prov).__name__}")
+            else:
+                for pkey in PROVENANCE_KEYS:
+                    if pkey not in prov:
+                        fail(rel, f"{label} provenance is missing '{pkey}'")
     return read
 
 
@@ -578,6 +594,14 @@ def self_test():
             "switch is missing top-level", "incomplete switch analysis not caught")
     rejects({**_base_fixture(), "d/switches/s.yml": "subject: x\njob_story: y\n"},
             "switch is missing top-level", "switch analysis without 'interviewee' not caught")
+    rejects({**_base_fixture(), "d/switches/s.yml": "schema_version: 2\nprovenance:\n  skill: jtbd-switch\n  version: 1.8.0.0\n  created_at: '2026-08-31'\ninterviewee: x\ntimeline: t\nforces: f\njob_story: j\nevidence_strength: e\n"},
+            "schema_version must be 1", "invalid schema_version not caught")
+    rejects({**_base_fixture(), "d/switches/s.yml": "schema_version: 1\nprovenance: not-a-mapping\ninterviewee: x\ntimeline: t\nforces: f\njob_story: j\nevidence_strength: e\n"},
+            "provenance must be a mapping", "non-mapping provenance not caught")
+    rejects({**_base_fixture(), "d/switches/s.yml": "schema_version: 1\nprovenance:\n  skill: jtbd-switch\ninterviewee: x\ntimeline: t\nforces: f\njob_story: j\nevidence_strength: e\n"},
+            "provenance is missing", "incomplete provenance not caught")
+    rejects({**_base_fixture(), "d/jobs/j.yml": "job: x\nsteps: []\n"},
+            "job map is missing top-level", "job map missing schema_version not caught")
     rejects({**_base_fixture(),
              ".claude/commands/alpha.md": WRAPPER.format(name="alpha") + "see ghost/SKILL.md\n"},
             "which does not exist", "dangling SKILL.md reference not caught")

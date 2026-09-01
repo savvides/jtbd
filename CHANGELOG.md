@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0.0] - 2026-08-31
+
+### Added
+- **Formal Schema Specifications (`docs/schema/`):**
+  - Added JSON/YAML schema definitions for all `.jtbd/` artifacts: `manifest.schema.yml`, `switch.schema.yml`, `patterns.schema.yml`, and `job-map.schema.yml`.
+  - Added `docs/schema/README.md` defining data contracts, field definitions, and design goals.
+- **Traceable Provenance Metadata:**
+  - Added top-level `provenance` block (`skill`, `version`, `created_at`) across all generated YAML artifacts and skill templates (`/jtbd-switch`, `/jtbd-patterns`, `/jtbd-map`).
+
+### Changed
+- **Unified Schema Versioning:**
+  - Standardized on `schema_version: 1` across all switch analyses and job maps in addition to manifests and patterns.
+- **Validator Enhancements:**
+  - `scripts/validate.py` now enforces strict schema versioning (`schema_version: 1`), top-level key contracts, and `provenance` metadata across all `.jtbd/` YAML files with expanded self-test coverage.
+
 ## [1.8.0.0] - 2026-08-31
 
 ### Changed

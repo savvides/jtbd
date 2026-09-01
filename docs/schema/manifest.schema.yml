@@ -1,0 +1,52 @@
+# Schema: JTBD Project Manifest (.jtbd/manifest.yml)
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "JTBDProjectManifest"
+type: "object"
+required:
+  - "schema_version"
+  - "product"
+  - "target_user"
+properties:
+  schema_version:
+    type: "integer"
+    enum: [1]
+    description: "Schema version for project manifest format."
+  product:
+    type: "object"
+    required:
+      - "name"
+      - "description"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the product under evaluation."
+      description:
+        type: "string"
+        description: "High-level summary of what the product does."
+      stage:
+        type: "string"
+        enum: ["idea", "building", "has-users", "growth"]
+        description: "Current stage of product development."
+  target_user:
+    type: "object"
+    required:
+      - "role"
+      - "context"
+    properties:
+      role:
+        type: "string"
+        description: "Primary role of the target customer/interviewee."
+      context:
+        type: "string"
+        description: "Operational or business context of the target customer."
+  settings:
+    type: "object"
+    properties:
+      auto_commit:
+        type: "boolean"
+      gitignore_raw:
+        type: "boolean"
+      evidence_threshold:
+        type: "integer"
+        minimum: 1
+        maximum: 10

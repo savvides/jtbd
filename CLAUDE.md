@@ -29,8 +29,9 @@ Open source skills for the Jobs to Be Done framework, supporting Claude Code, Go
 
 ## YAML Schema
 
+All `.jtbd/` data artifacts carry `schema_version: 1` and formal specifications live under `docs/schema/`. Generated artifacts (`switches/`, `patterns/`, `jobs/`) carry a structured `provenance` metadata block (`skill`, `version`, `created_at`).
 Switch analysis files carry `interviewee`, `timeline`, `forces`, `job_story` and `evidence_strength`.
-See `examples/expected-output.yml` for the full schema. `manifest.yml` and patterns files carry `schema_version: 1`. See `demo/.jtbd/` for a populated example project.
+See `examples/expected-output.yml` for the full schema. See `demo/.jtbd/` for a populated example project.
 
 ## Skill routing
 

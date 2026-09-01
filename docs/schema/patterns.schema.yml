@@ -1,0 +1,116 @@
+# Schema: JTBD Patterns Synthesis (.jtbd/patterns/*.yml)
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "JTBDPatternsSynthesis"
+type: "object"
+required:
+  - "schema_version"
+  - "provenance"
+  - "analysis_date"
+  - "switch_files_analyzed"
+  - "files_included"
+  - "clusters"
+  - "force_patterns"
+  - "timeline_patterns"
+properties:
+  schema_version:
+    type: "integer"
+    enum: [1]
+    description: "Schema version for patterns synthesis format."
+  provenance:
+    type: "object"
+    required:
+      - "skill"
+      - "version"
+      - "created_at"
+    properties:
+      skill:
+        type: "string"
+      version:
+        type: "string"
+      created_at:
+        type: "string"
+  analysis_date:
+    type: "string"
+  switch_files_analyzed:
+    type: "integer"
+    minimum: 1
+  files_included:
+    type: "array"
+    items:
+      type: "string"
+  clusters:
+    type: "array"
+    items:
+      type: "object"
+      required:
+        - "job"
+        - "frequency"
+        - "common_push"
+        - "common_pull"
+        - "key_quotes"
+      properties:
+        job:
+          type: "string"
+        frequency:
+          type: "string"
+        common_push:
+          type: "string"
+        common_pull:
+          type: "string"
+        key_quotes:
+          type: "array"
+          items:
+            type: "string"
+  emerging_signals:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        signal:
+          type: "string"
+        source:
+          type: "string"
+        note:
+          type: "string"
+  force_patterns:
+    type: "object"
+    required:
+      - "strongest_push"
+      - "strongest_pull"
+      - "strongest_anxiety"
+      - "strongest_habit"
+    properties:
+      strongest_push:
+        type: "string"
+      strongest_pull:
+        type: "string"
+      strongest_anxiety:
+        type: "string"
+      strongest_habit:
+        type: "string"
+  timeline_patterns:
+    type: "object"
+    required:
+      - "avg_passive_duration"
+      - "common_active_trigger"
+      - "common_deciding_factors"
+      - "common_onboarding_friction"
+    properties:
+      avg_passive_duration:
+        type: "string"
+      common_active_trigger:
+        type: "string"
+      common_deciding_factors:
+        type: "array"
+        items:
+          type: "string"
+      common_onboarding_friction:
+        type: "string"
+  evidence_gaps:
+    type: "array"
+    items:
+      type: "string"
+  recommendations:
+    type: "array"
+    items:
+      type: "string"

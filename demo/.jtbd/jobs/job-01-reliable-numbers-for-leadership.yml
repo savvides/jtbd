@@ -1,5 +1,11 @@
 # Synthesized from patterns analysis on 2026-04-15
 
+schema_version: 1
+provenance:
+  skill: "jtbd-map"
+  version: "1.8.0.0"
+  created_at: "2026-04-15"
+
 job: "Get reliable numbers to leadership without being the bottleneck"
 frequency: 3/3 interviews
 confidence: high
