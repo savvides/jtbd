@@ -1,18 +1,18 @@
 # The Switch: A Founder's Guide to Jobs to Be Done
 
-We wrote this guide to Bob Moesta's Switch methodology for startup founders trying to figure out why customers actually change products. We stripped out the academic theory so you can focus on running better interviews and building the right thing.
+We wrote this guide to Bob Moesta's Switch methodology for startup founders trying to understand why customers change products. We stripped out academic theory so you can focus on running useful interviews and building the right product.
 
 ## The core idea
 
 People do not just buy products. They hire them to make progress in their lives.
 
-While that might sound a bit abstract, the reality is straightforward. Your customer had a routine before they found your product. They were getting the job done somehow, even if the process was terrible. Eventually, something broke or changed, forcing them to look for a better way. They evaluated a few options, picked one, and made the switch.
+Your customer had a routine before they found your product. They were getting the job done somehow, even if the process was cumbersome. Eventually, something broke or changed, forcing them to look for a better way. They evaluated a few options, picked one, and made the switch.
 
-Understanding that entire switching story tells you exactly what you need to build.
+Understanding that entire switching story tells you what you need to build.
 
 ## The four forces
 
-Every decision to switch is driven by four forces. Two of them push the customer toward making a change, while the other two hold them back.
+Every decision to switch is driven by four forces. Two push the customer toward change, while two hold them back.
 
 ```text
 FORCES DRIVING THE SWITCH          FORCES RESISTING THE SWITCH
@@ -27,13 +27,13 @@ solution
 "What is attracting me"            "What I am used to"
 ```
 
-**Push** represents what is actively failing in the status quo. Maybe the reporting tool crashes during month-end close. The spreadsheet has formula errors nobody can find. The current vendor missed a critical deadline. Push is always tied to a specific event or pattern, not a vague feeling. Hearing a customer say "it was frustrating" is not a push. Hearing "it crashed for three days during our biggest month" is a push.
+**Push** represents what is failing in the status quo. Maybe the reporting tool crashes during month-end close. The spreadsheet has formula errors nobody can find. The current vendor missed a critical deadline. Push is always tied to a specific event or pattern, not a vague feeling. Hearing a customer say "it was frustrating" is not a push. Hearing "it crashed for three days during our biggest month" is a push.
 
-**Pull** is the magnetic appeal of the new solution. Real-time dashboards, a single source of truth, or a vendor who actually picks up the phone. Pull is fundamentally about the customer's imagined future state, not specific features. They are not attracted to "real-time sync" as much as the idea that they can see their numbers whenever they want without having to ask someone else.
+**Pull** is the attraction of the new solution. Real-time dashboards, a single source of truth, or responsive support. Pull centers on the customer's desired future state rather than specific features. They are not attracted to "real-time sync" so much as knowing they can check metrics directly without waiting on another team.
 
-**Anxiety** covers everything that scares them about switching. They worry the data migration will fail, their team will hate the new tool, or the new vendor will turn out to be worse than the old one. Anxiety is the silent killer of sales. People rarely volunteer their anxieties, so you have to probe for them by asking things like, "What almost stopped you from switching?"
+**Anxiety** covers everything that worries them about switching. They worry the data migration will fail, their team will resist the new tool, or the new vendor will disappoint. Anxiety is often unspoken during sales conversations. Probe for anxieties directly by asking: "What almost stopped you from switching?"
 
-**Habit** is simply the comfort of the familiar. The team already knows the old tool's quirks and they have workarounds for every bug. People will tolerate an enormous amount of pain if the alternative requires them to change their behavior. The switch only happens when the combination of Push and Pull completely overwhelms Anxiety and Habit.
+**Habit** is the comfort of the familiar. The team already knows the old tool's quirks and workarounds. People tolerate friction if alternative options require new habits. A switch happens only when Push and Pull outweigh Anxiety and Habit.
 
 ## The switching timeline
 
@@ -93,14 +93,14 @@ Dig into each force with targeted questions:
 
 ### Red flags to watch for
 
-- **"I would..."** — Hypothetical language usually means they are speculating instead of recalling an actual event. Redirect them by asking about a time they actually did that.
+- **"I would..."** — Hypothetical language usually means they are speculating instead of recalling an actual event. Redirect them by asking about a time they did that.
 - **"Everyone needs..."** — Broad category-level answers. Push for specificity by asking them to name one specific person.
 - **"It was frustrating"** — Vague emotional statements. Ask them what specifically happened that frustrated them.
 - **No specific dates or events** — If the timeline feels too abstract, try anchoring it. Ask if this happened before or after a reference event, or roughly how many weeks ago it was.
 
 ## How the skills use this
 
-You can run `/jtbd-interview` to generate a customized interview script based on your product context and any evidence gaps from your previous interviews. 
+You can run `/jtbd-interview` to generate a customized interview script based on your product context and any evidence gaps from previous interviews. 
 
 When you run `/jtbd-switch` on an interview transcript, it extracts:
 
@@ -109,11 +109,11 @@ When you run `/jtbd-switch` on an interview transcript, it extracts:
 3. A **job story** in Klement format: "When [situation], I want [motivation], so I can [outcome]."
 4. An **evidence strength score** that rates the quality of the interview data.
 
-This output gets saved as a YAML file in `.jtbd/switches/` inside your repository. Once you have analyzed three or more interviews, patterns start to emerge, showing you the real jobs your product needs to serve.
+This output gets saved as a YAML file in `.jtbd/switches/` inside your repository. Once you have analyzed three or more interviews, patterns start to emerge, showing you the jobs your product must address.
 
 ## Further reading
 
 - Bob Moesta & Greg Engle, "Demand-Side Sales 101" — The practitioner's guide to running Switch interviews.
 - Clayton Christensen, "Competing Against Luck" — The theoretical foundation of the framework.
-- Alan Klement, "When Coffee and Kale Compete" — A deeper look at job stories and practical applications.
-- Bob Moesta, "Learning to Build" — How to use JTBD for actual product development.
+- Alan Klement, "When Coffee and Kale Compete" — A look at job stories and practical applications.
+- Bob Moesta, "Learning to Build" — How to use JTBD for product development.

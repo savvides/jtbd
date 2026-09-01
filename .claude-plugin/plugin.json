@@ -1,7 +1,7 @@
 {
   "name": "jtbd",
   "description": "Jobs to Be Done skills for Claude Code. Turn customer interview transcripts into structured, version-controlled demand evidence.",
-  "version": "1.7.0.0",
+  "version": "1.8.0.0",
   "author": {
     "name": "Philippos Savvides",
     "url": "https://github.com/savvides"

@@ -195,25 +195,25 @@ In every command below, replace `<JTBD_SKILLS>` with the actual path the preambl
 echoed for `JTBD_SKILLS`. The user is in their own project, not this repo, so a bare
 `examples/...` path does not resolve for them.
 
-> Run this in Claude Code:
+> Run this command:
 >
 > ```
 > /jtbd-switch <JTBD_SKILLS>/examples/sample-transcript.txt
 > ```
 >
-> That will analyze the same Sarah transcript you just saw, and create a `.jtbd/switches/` file in your repo. You'll get to review the output before it's committed.
+> That will analyze the Sarah transcript you just saw and create a `.jtbd/switches/` file in your repo. You can review the output before saving.
 >
-> After that, do a real interview with one of your customers or users. Record it (Fireflies, Otter, Zoom transcription, whatever). Then run `/jtbd-switch` on that transcript. That's when it gets real.
+> Next, conduct an interview with one of your customers or users. Record and transcribe it, then run `/jtbd-switch` on that transcript.
 >
 > **The full workflow:**
-> 1. `/jtbd-demo` — You just did this. Understand the framework.
+> 1. `/jtbd-demo` — Understand the framework.
 > 2. `/jtbd-switch` — Analyze one interview at a time.
 > 3. `/jtbd-patterns` — After 3+ interviews, find what repeats.
 > 4. `/jtbd-forces` — Visualize the forces as an HTML diagram.
-> 5. `/jtbd-map` — Synthesize the patterns into a Job Map.
+> 5. `/jtbd-map` — Synthesize patterns into a Job Map.
 > 6. `/jtbd-brief` — Turn that Job Map into a product brief.
 >
-> Start with step 2. One real interview. That's the assignment.
+> Start with step 2: one customer interview.
 
 **If B (Come back later):**
 

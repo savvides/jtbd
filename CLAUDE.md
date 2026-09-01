@@ -1,6 +1,6 @@
 # jtbd
 
-Open source Claude Code skills for the Jobs to Be Done framework. Helps startup founders turn customer interview transcripts into structured, version-controlled demand evidence.
+Open source skills for the Jobs to Be Done framework, supporting Claude Code, Google Antigravity, and Gemini. Helps startup founders turn customer interview transcripts into structured, version-controlled demand evidence.
 
 ## Skills
 
@@ -9,13 +9,9 @@ Open source Claude Code skills for the Jobs to Be Done framework. Helps startup 
 - `/jtbd-interview` — Generate a customized Switch interview script
 - `/jtbd-patterns` — Find cross-interview patterns across 3+ switch analyses
 - `/jtbd-pipeline` — Batch-process multiple transcripts through the full analysis pipeline
-- `/jtbd-forces` (Preview) — Generates an HTML diagram of the four forces
-- `/jtbd-map` (Preview) — Synthesizes patterns into a structured Job Map (YAML + Markdown)
-- `/jtbd-brief` (Preview) — Drafts a JTBD-native product brief from Job Map data
-
-The three Preview skills run, but `/jtbd-map` emits a schema that does not carry every
-field `/jtbd-brief` requires, so on the default path part of a generated brief has no
-source in the user's data. README states this for users; TODOS.md tracks the fix.
+- `/jtbd-forces` — Generate an HTML diagram of the four forces
+- `/jtbd-map` — Synthesize patterns into a structured Job Map (YAML + Markdown)
+- `/jtbd-brief` — Draft a JTBD-native product brief from Job Map data
 
 ## Architecture
 

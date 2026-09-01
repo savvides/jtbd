@@ -246,7 +246,7 @@ python3 -c "import yaml, sys; yaml.safe_load(open(sys.argv[1]))" /path/to/genera
 
 If `YAML_INVALID`: regenerate the output. Do not proceed with broken YAML.
 
-If `PYTHON3` is `no`: skip validation (Claude's output is usually valid YAML, and the human review step catches issues).
+If `PYTHON3` is `no`: skip validation (the human review step catches syntax issues).
 
 ## Human Review
 
