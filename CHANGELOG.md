@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0.0] - 2026-08-31
+
+### Changed
+- **All 8 skills marked Stable:**
+  - `/jtbd-map`: Updated schema to emit full YAML representation (`job`, `frequency`, `confidence`, `steps`, `switching_trigger`, `forces_summary`) matching demo data and providing complete input for product briefs.
+  - `/jtbd-brief`: Standardized input processing to consume the unified Job Map schema directly.
+  - `/jtbd-forces`: Added explicit layout, typography, CSS Grid, intensity badges, and inferred quote styling rules to ensure reproducible, accessible standalone HTML output.
+  - Removed Preview labels and limitations across all documentation.
+
+### Improved
+- **Voice and Documentation Quality:**
+  - Audited all repository documentation, prompts, guides, and installer scripts with the `avoid-ai-writing` rubric to remove AI writing tells, hollow intensifiers, and formulaic constructions.
+  - Clear multi-agent positioning across Google Antigravity, Gemini, and Claude Code throughout all documentation.
+
 ## [1.7.0.0] - 2026-08-31
 
 ### Added
